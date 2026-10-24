@@ -1,0 +1,74 @@
+# Font
+font-family = "Liga SFMono Nerd Font"
+font-size = 14
+font-style = "Medium"
+font-family-italic = "Maple Mono"
+font-family-bold-italic = "Maple Mono"
+font-style-italic = "Italic"
+font-style-bold-italic = "SemiBold Italic"
+
+# Theme & Window
+theme = noctalia
+background-opacity = 1.00
+window-width = 115
+window-height = 45
+window-padding-y = 0
+window-padding-x = 0
+macos-titlebar-style = hidden
+macos-titlebar-proxy-icon = hidden
+
+# Mouse & Cursor
+mouse-hide-while-typing = true
+cursor-style = block
+cursor-style-blink = false
+
+# Shell Integration
+shell-integration = fish
+shell-integration-features = no-cursor
+
+# Custom Shader
+custom-shader = shaders/ghostty/cursor_warp.glsl
+custom-shader-animation = always
+
+# Keybindings - General
+keybind = ctrl+space>r=reload_config
+keybind = ctrl+space>a=select_all
+keybind = ctrl+space>c=copy_to_clipboard
+keybind = ctrl+space>v=paste_from_clipboard
+keybind = ctrl+space>k>i>l>l=close_surface
+keybind = ctrl+s>w>s=write_screen_file:open
+
+# Keybindings - Window
+keybind = ctrl+space>w>n=new_window
+keybind = ctrl+space>w>d=toggle_window_decorations
+keybind = ctrl+space>w>f=toggle_fullscreen
+
+# Keybindings - Tabs
+keybind = ctrl+space>t>n=new_tab
+keybind = ctrl+space>t>x=close_tab:this
+keybind = alt+[=previous_tab
+keybind = alt+]=next_tab
+
+# Keybindings - Splits
+keybind = ctrl+space>p>n=new_split:auto
+keybind = ctrl+space>p>v=new_split:right
+keybind = ctrl+space>p>s=new_split:down
+keybind = ctrl+space>p>f=toggle_split_zoom
+keybind = ctrl+space>p>x=close_surface
+keybind = alt+equal=equalize_splits
+
+# Keybindings - Split Navigation
+keybind = alt+h=goto_split:left
+keybind = alt+j=goto_split:bottom
+keybind = alt+k=goto_split:top
+keybind = alt+l=goto_split:right
+
+# Keybindings - Split Resizing
+keybind = alt+left=resize_split:left,10
+keybind = alt+right=resize_split:right,10
+keybind = alt+up=resize_split:up,10
+keybind = alt+down=resize_split:down,10
+
+# Keybindings - Prompt Navigation
+keybind = alt+b=jump_to_prompt:-1
+keybind = alt+f=jump_to_prompt:1

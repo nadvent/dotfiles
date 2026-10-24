@@ -1,0 +1,22 @@
+# ==============================================================================
+# Umbriel Display & Output Configuration
+# Outputs: https://docs.noctalia.dev/umbriel/outputs/
+# Events:  https://docs.noctalia.dev/umbriel/configuration/#events
+# ==============================================================================
+
+# Lid events
+# Remove the laptop panel from the desktop while the lid is closed, then
+# restore it when the lid opens. Replace eDP-1 with the name from `umbriel outputs`.
+[events]
+lid_close = "umbriel msg output-disable:eDP-1"
+lid_open = "umbriel msg output-enable:eDP-1"
+
+# Static / fallback output configuration.
+# Run `umbriel outputs` to find names and modes.
+# Note: Dynamic displays are also managed in outputs.toml by Noctalia.
+[output.DP-1]
+mode = "2560x1440@144"
+position = [0, 0]
+scale = 1.2
+vrr = "fullscreen"
+hdr = "auto"

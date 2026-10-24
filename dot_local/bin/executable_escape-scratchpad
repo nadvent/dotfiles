@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Query only scratchpads that are currently visible
+visible_scratchpads=$(umbriel windows --json 2>/dev/null | jq -r '.[] | select(.scratchpad != "" and .visible == true) | .scratchpad' | sort -u)
+
+# If any scratchpad is currently visible, toggle it to hide it
+if [[ -n "$visible_scratchpads" ]]; then
+    while IFS= read -r sp; do
+        [[ -n "$sp" ]] && umbriel msg "scratchpad-toggle:$sp"
+    done <<< "$visible_scratchpads"
+fi

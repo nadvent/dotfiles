@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+exec ghostty \
+  --class="com.mitchellh.ghostty.scratchpad" \
+  --config-file="$HOME/.config/ghostty/scratchpad" \
+  "$@"

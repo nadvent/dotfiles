@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+APP_ID="qutebrowser-scratchpad"
+BASE_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/qutebrowser-scratchpad"
+CONFIG_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/qutebrowser/scratchpad.py"
+
+exec qutebrowser \
+    --desktop-file-name "$APP_ID" \
+    --basedir "$BASE_DIR" \
+    --config-py "$CONFIG_FILE" \
+    "$@"

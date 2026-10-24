@@ -1,0 +1,72 @@
+(defcfg
+  linux-dev-names-include (
+    "nullbits SNAP"
+  )
+  process-unmapped-keys yes
+)
+
+;; --------------------------------------------------------------------------
+;; Aliases
+;; --------------------------------------------------------------------------
+(defalias
+  ;; Caps Lock: Tap -> One-Shot Symbol Layer (1000ms), Hold -> Left Control
+  cap (tap-hold-release 200 200 (one-shot 1000 (layer-toggle symbols)) lctl)
+
+  ;; Right Shift: Tap -> Backspace, Hold -> Right Shift
+  rsh (tap-hold-release 180 180 bspc rsft)
+
+  ;; Space: Tap -> Space, Hold -> Unified Navigation & Modifiers Layer
+  spc_navmod (tap-hold-release 200 200 spc (layer-toggle nav_mod))
+
+  ;; Physical Left Control: Tap -> Escape, Hold -> Left Control
+  ctl_esc (tap-hold-release 200 200 esc lctl)
+)
+
+;; --------------------------------------------------------------------------
+;; Physical Input Source (defsrc) - 34 keys total
+;; --------------------------------------------------------------------------
+(defsrc
+  caps
+  lctl
+  q    w    e    r    t         y    u    i    o    p
+  a    s    d    f    g         h    j    k    l    scln
+  z    x    c    v    b         n    m    ,    .    /
+  spc                           rsft
+)
+
+;; --------------------------------------------------------------------------
+;; Base Layer (34 keys)
+;; --------------------------------------------------------------------------
+(deflayer base
+  @cap
+  @ctl_esc
+  q    w    e    r    t         y    u    i    o    p
+  a    s    d    f    g         h    j    k    l    scln
+  z    x    c    v    b         n    m    ,    .    /
+  @spc_navmod                   @rsh
+)
+
+;; --------------------------------------------------------------------------
+;; Unified Navigation & Modifier Layer (Held via Space) - 34 keys
+;; Left hand handles modifiers; Right hand handles navigation
+;; --------------------------------------------------------------------------
+(deflayer nav_mod
+  _
+  _
+  _    _    _    _    _         home pgdn pgup end  _
+  lmet lalt lctl lsft _         left down up   rght _
+  _    _    _    _    _         _    _    _    _    _
+  _                             _
+)
+
+;; --------------------------------------------------------------------------
+;; Symbol Layer (Activated via Caps Lock tap) - 34 keys
+;; --------------------------------------------------------------------------
+(deflayer symbols
+  _
+  _
+  S-1     S-2     S-3     S-4     S-5     S-6     S-7     S-8     S-min   S-eql
+  S-grv   grv     S-[     S-]     S-bksl  bksl    S-9     S-0     [       ]
+  S-,     S-.     S-scln  S-apos  S-/     min     eql     scln    apos    /
+  _                               _
+)

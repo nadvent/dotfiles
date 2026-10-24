@@ -1,0 +1,82 @@
+# ==============================================================================
+# Chezmoi Dotfiles Repository .gitignore
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Chezmoi internal state & local machine overrides
+# ------------------------------------------------------------------------------
+.chezmoistate.boltdb
+.chezmoiroot.local
+.chezmoidata.local.*
+chezmoi.local.*
+
+# Accidental nested git repositories captured by `chezmoi add` (e.g. plugins/themes)
+# Tip: For external repos, prefer using .chezmoiexternal.toml
+**/dot_git/
+**/dot_git/**
+
+# ------------------------------------------------------------------------------
+# Secrets & credentials (prevent accidental commits of unencrypted secrets)
+# ------------------------------------------------------------------------------
+*.key
+*.pem
+*.age
+key.txt
+*.secret
+*.token
+.env
+.env.*
+!.env.example
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+
+# ------------------------------------------------------------------------------
+# Editor temporary & backup files
+# ------------------------------------------------------------------------------
+# Vim / Neovim swap files
+*~
+*.swp
+*.swo
+*.swn
+.*.swp
+.*.swo
+
+# Emacs
+#*#
+.#*
+
+# Backup files
+*.bak
+*.backup
+*.orig
+*.rej
+
+# IDE metadata (repo-level)
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ------------------------------------------------------------------------------
+# Operating system metadata
+# ------------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# ------------------------------------------------------------------------------
+# Logs, temporary files & runtime caches
+# ------------------------------------------------------------------------------
+*.log
+*.tmp
+__pycache__/
+*.py[cod]
+.cache/
+node_modules/

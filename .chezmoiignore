@@ -1,0 +1,62 @@
+# ==============================================================================
+# Chezmoi Target Ignore Rules (.chezmoiignore)
+# Files matched here will NOT be applied or deployed to $HOME
+# Patterns match target paths relative to $HOME (or root of source repo)
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Repository documentation & maintenance files
+# ------------------------------------------------------------------------------
+README.md
+LICENSE*
+CHANGELOG*
+CONTRIBUTING*
+docs/**
+.github/**
+
+# ------------------------------------------------------------------------------
+# Bootstrap / installation scripts & task runners (repo-only)
+# ------------------------------------------------------------------------------
+install.sh
+setup.sh
+bootstrap.sh
+scripts/**
+Makefile
+justfile
+Taskfile.yml
+
+# ------------------------------------------------------------------------------
+# Third-party documentation & licenses inside managed directories
+# ------------------------------------------------------------------------------
+**/*.md
+**/LICENSE*
+
+# ------------------------------------------------------------------------------
+# Nested Git metadata (e.g. from cloned themes, plugins, or shaders)
+# ------------------------------------------------------------------------------
+**/.git
+**/.git/**
+**/.gitignore
+**/.gitmodules
+**/.gitattributes
+
+# ------------------------------------------------------------------------------
+# Backup, patch & editor temporary files
+# ------------------------------------------------------------------------------
+**/*.bak
+**/*.backup
+**/*.orig
+**/*.rej
+**/*~
+**/*.swp
+**/*.swo
+**/*.swn
+**/.*.swp
+**/.*.swo
+
+# ------------------------------------------------------------------------------
+# OS & System metadata
+# ------------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+Desktop.ini

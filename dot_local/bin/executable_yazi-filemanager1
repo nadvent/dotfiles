@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+"""
+D-Bus service implementing org.freedesktop.FileManager1 for Yazi in Ghostty.
+Handles 'ShowItems' and 'ShowFolders' calls from browsers (Zen, Firefox, Chrome)
+and desktop applications.
+"""
+import os
+import subprocess
+import urllib.parse
+import gi
+
+gi.require_version('Gio', '2.0')
+from gi.repository import Gio, GLib
+
+INTERFACE_XML = """
+<node>
+  <interface name='org.freedesktop.FileManager1'>
+    <method name='ShowItems'>
+      <arg type='as' name='URIs' direction='in'/>
+      <arg type='s' name='StartupId' direction='in'/>
+    </method>
+    <method name='ShowFolders'>
+      <arg type='as' name='URIs' direction='in'/>
+      <arg type='s' name='StartupId' direction='in'/>
+    </method>
+    <method name='ShowItemProperties'>
+      <arg type='as' name='URIs' direction='in'/>
+      <arg type='s' name='StartupId' direction='in'/>
+    </method>
+  </interface>
+</node>
+"""
+
+class YaziFileManagerService:
+    def __init__(self):
+        self.node_info = Gio.DBusNodeInfo.new_for_xml(INTERFACE_XML)
+        self.owner_id = Gio.bus_own_name(
+            Gio.BusType.SESSION,
+            'org.freedesktop.FileManager1',
+            Gio.BusNameOwnerFlags.REPLACE,
+            self.on_bus_acquired,
+            self.on_name_acquired,
+            self.on_name_lost,
+        )
+
+    def on_bus_acquired(self, conn, name):
+        interface = self.node_info.interfaces[0]
+        conn.register_object(
+            '/org/freedesktop/FileManager1',
+            interface,
+            self.handle_method_call,
+            None,
+            None,
+        )
+
+    def on_name_acquired(self, conn, name):
+        pass
+
+    def on_name_lost(self, conn, name):
+        pass
+
+    def handle_method_call(self, conn, sender, object_path, interface_name, method_name, parameters, invocation):
+        uris, startup_id = parameters.unpack()
+        for uri in uris:
+            parsed = urllib.parse.urlparse(uri)
+            if parsed.scheme == 'file' or not parsed.scheme:
+                path = urllib.parse.unquote(parsed.path)
+                if os.path.exists(path):
+                    subprocess.Popen(['ghostty', '--class=org.yazi.file_chooser', '-e', 'yazi', path])
+                    break
+        invocation.return_value(None)
+
+if __name__ == '__main__':
+    service = YaziFileManagerService()
+    loop = GLib.MainLoop()
+    try:
+        loop.run()
+    except KeyboardInterrupt:
+        pass

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Ghostty Scratchpad
+Comment=Terminal emulator dedicated to scratchpad mode
+Exec=ghostty-scratchpad
+Icon=com.mitchellh.ghostty
+StartupWMClass=com.mitchellh.ghostty.scratchpad
+Categories=System;TerminalEmulator;
+Terminal=false

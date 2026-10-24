@@ -1,0 +1,34 @@
+# ==============================================================================
+# Umbriel Configuration
+#
+# Complete reference: https://docs.noctalia.dev/umbriel/
+# Check edits with `umbriel config validate`.
+# ==============================================================================
+
+[include]
+files = [
+  # Presets & effects
+  "/usr/share/umbriel/effects/cursor/trail/effect.toml",
+
+  # Displays managed dynamically by Noctalia
+  "outputs.toml",
+
+  # Modular configuration files
+  "cfg/animation.toml",
+  "cfg/autostart.toml",
+  "cfg/display.toml",
+  "cfg/input.toml",
+  "cfg/keybinds.toml",
+  "cfg/layout.toml",
+  "cfg/misc.toml",
+  "cfg/rules.toml",
+]
+
+[include.optional]
+files = [
+  # Optional GUI rule overrides
+  "cfg/noctalia-rules-studio.toml",
+
+  # Noctalia shell dynamic theme & colors,
+  "noctalia.toml",
+]

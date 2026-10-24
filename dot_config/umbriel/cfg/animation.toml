@@ -1,0 +1,14 @@
+# ==============================================================================
+# Umbriel Animation Configuration
+# https://docs.noctalia.dev/umbriel/animation/
+# ==============================================================================
+
+# Built-in overview and animation values are used by default.
+
+# Optional live workspace reveal (see docs/user/animation.md).
+# Add the bundled effects/animation/workspace_wipe/effect.toml to your includes.
+# [animation.workspaces]
+# style = "reveal"          # Default: "slide"
+# effect = "workspace_wipe"
+# duration_ms = 300
+# curve = "easeout"

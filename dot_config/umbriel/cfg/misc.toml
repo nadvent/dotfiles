@@ -1,0 +1,71 @@
+# ==============================================================================
+# Umbriel Miscellaneous Configuration
+# XWayland, Scratchpads, Blur, Effects & Hot Corners
+# ==============================================================================
+
+# General & XWayland settings
+# https://docs.noctalia.dev/umbriel/configuration/#general
+[general]
+xwayland = true
+# Sharp X11 apps and games on scaled outputs; they see physical resolutions.
+xwayland_native_resolution = true
+# Umbriel announces the X11 interface scale and cursor theme through XSETTINGS.
+# Turn this off to run your own manager, such as xsettingsd.
+xwayland_xsettings = true
+
+# ------------------------------------------------------------------------------
+# Scratchpads
+# ------------------------------------------------------------------------------
+[[scratchpad]]
+name = "notes"
+spawn_when_empty = "obsidian"
+
+[[scratchpad]]
+name = "music"
+spawn_when_empty = "astra"
+
+[[scratchpad]]
+name = "Quick Search"
+spawn_when_empty = "qutebrowser-scratchpad"
+
+[[scratchpad]]
+name = "terminal"
+spawn_when_empty = "ghostty-scratchpad"
+
+# ------------------------------------------------------------------------------
+# Appearance
+# Blur uses a smaller radius than the built-in default.
+# https://docs.noctalia.dev/umbriel/appearance/
+# ------------------------------------------------------------------------------
+[appearance.blur]
+radius = 3
+
+# Choose the background color shown if the lock screen takes too long to appear.
+# [colors]
+# backdrop = "#000000FF"
+
+# ------------------------------------------------------------------------------
+# Effects
+# Every effect is off until a preset is selected; border and window effects
+# scale with overview zoom. Include a bundled preset, then select it by name.
+# https://docs.noctalia.dev/umbriel/effects/
+# ------------------------------------------------------------------------------
+[effects]
+cursor = "trail"
+# border = "pulse"
+
+# ------------------------------------------------------------------------------
+# Screencast
+# https://docs.noctalia.dev/umbriel/configuration/#screencast
+# ------------------------------------------------------------------------------
+# [screencast]
+# disable_dynamic_confirmation = true
+
+# ------------------------------------------------------------------------------
+# Hot Corners / Overview
+# https://docs.noctalia.dev/umbriel/workspaces-overview/
+# ------------------------------------------------------------------------------
+# [hot_corners.top_left]
+# enabled = true
+# delay_ms = 500
+# action = "overview-open"

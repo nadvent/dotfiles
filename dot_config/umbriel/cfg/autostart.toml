@@ -1,0 +1,7 @@
+# ==============================================================================
+# Umbriel Autostart Applications
+# https://docs.noctalia.dev/umbriel/configuration/#general
+# ==============================================================================
+
+[general]
+autostart = ["noctalia", "ghostty", "kded6", "${XDG_BIN_HOME:-$HOME/.local/bin}/lg_vm.sh"]

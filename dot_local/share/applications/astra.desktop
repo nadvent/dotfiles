@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Astra
+Exec=astra %U
+TryExec=astra
+Terminal=false
+Type=Application
+Icon=astra
+StartupWMClass=Astra
+Comment=Audiophile music player with advanced visualization
+Categories=AudioVideo;Audio;Player;Music;
+MimeType=audio/mpeg;audio/flac;audio/ogg;audio/x-wav;audio/wav;audio/aac;audio/mp4;audio/x-m4a;audio/x-flac;audio/x-mp3;audio/x-mpeg;audio/x-ogg;audio/x-vorbis;audio/x-vorbis+ogg;audio/opus;

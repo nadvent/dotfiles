@@ -1,0 +1,14 @@
+[Unit]
+Description=Yazi D-Bus File Manager Service (org.freedesktop.FileManager1)
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+Type=dbus
+BusName=org.freedesktop.FileManager1
+ExecStart=/home/nazhanys/.local/bin/yazi-filemanager1
+Restart=on-failure
+Slice=session.slice
+
+[Install]
+WantedBy=graphical-session.target

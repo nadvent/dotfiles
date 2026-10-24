@@ -1,0 +1,108 @@
+# ==============================================================================
+# Zathura Configuration for Neovim & LaTeX Live-Preview
+# ==============================================================================
+
+# --- Live-Preview & Rendering -------------------------------------------------
+# Do not show "Loading..." text on recompile (prevents flashing during latexmk)
+set render-loading              "false"
+set render-loading-bg           "#1e1e2e"
+set render-loading-fg           "#cdd6f4"
+
+# Open document fitted to window width (optimal for side-by-side editing)
+set adjust-open                 "width"
+set pages-per-row               1
+set scroll-page-aware           "true"
+set smooth-scroll               "true"
+set scroll-step                 60
+
+# Spacing around pages (minimal margins to maximize reading area)
+set page-v-padding              4
+set page-h-padding              4
+
+# --- Clipboard & Window Titles -----------------------------------------------
+# Copy selection straight to system clipboard (Wayland / X11)
+set selection-clipboard         "clipboard"
+
+# Keep window title & statusbar clean (basename only, e.g., 'main.pdf')
+set window-title-basename       "true"
+set statusbar-basename          "true"
+set statusbar-page-percent      "true"
+
+# GUI elements ('s' for statusbar only; remove 's' for ultra-minimalist view)
+set guioptions                  "s"
+
+# --- SyncTeX & Neovim Integration --------------------------------------------
+# Enable SyncTeX backward search (Ctrl + Left Click on PDF to jump to LaTeX line)
+set synctex                     "true"
+set synctex-edit-modifier       "ctrl"
+
+# Fallback editor command if launched outside VimTeX:
+# (Note: VimTeX automatically configures this dynamically when invoked from Neovim)
+set synctex-editor-command      "nvim --headless -c 'edit +%{line} %{input}'"
+
+# --- Recolor / Dark Mode (LaTeX Writing at Night) ------------------------------
+# Keep hue of images, plots, and syntax highlights when dark mode is enabled
+set recolor-keephue             "true"
+set recolor-reverse-video       "false"
+
+# Start in normal (light/paper) mode; press 'r' to toggle dark mode
+set recolor                     "false"
+
+# Dark mode color palette (Catppuccin Mocha / Soft Dark)
+set recolor-lightcolor          "#1e1e2e"    # PDF background in dark mode
+set recolor-darkcolor           "#cdd6f4"    # Text/content in dark mode
+
+# --- UI Theme & Statusbar -----------------------------------------------------
+set font                        "monospace normal 10"
+
+set default-bg                  "#1e1e2e"
+set default-fg                  "#cdd6f4"
+
+set statusbar-bg                "#181825"
+set statusbar-fg                "#cdd6f4"
+
+set inputbar-bg                 "#181825"
+set inputbar-fg                 "#cdd6f4"
+
+set notification-bg             "#1e1e2e"
+set notification-fg             "#cdd6f4"
+set notification-error-bg       "#f38ba8"
+set notification-error-fg       "#11111b"
+set notification-warning-bg     "#fab387"
+set notification-warning-fg     "#11111b"
+
+set highlight-color             "rgba(249, 226, 175, 0.4)"
+set highlight-active-color      "rgba(137, 180, 250, 0.5)"
+
+set completion-bg               "#181825"
+set completion-fg               "#cdd6f4"
+set completion-highlight-bg     "#313244"
+set completion-highlight-fg     "#cdd6f4"
+set completion-group-bg         "#181825"
+set completion-group-fg         "#89b4fa"
+
+set index-bg                    "#1e1e2e"
+set index-fg                    "#cdd6f4"
+set index-active-bg             "#313244"
+set index-active-fg             "#89b4fa"
+
+# --- Keybindings --------------------------------------------------------------
+# One-key dark mode toggle (default is Ctrl+r; 'r' is normally rotate-cw)
+map r                           recolor
+
+# Vim-style half-page jumps
+map u                           scroll half-up
+map d                           scroll half-down
+
+# Quick zoom and width adjustments
+map a                           adjust_window best-fit
+map s                           adjust_window width
+map =                           zoom reset
+map K                           zoom in
+map J                           zoom out
+
+# Toggle two-page spread (useful for inspecting double-column papers/books)
+map D                           toggle_page_mode
+
+# Fullscreen toggle
+map <F11>                       toggle_fullscreen
