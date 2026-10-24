@@ -95,7 +95,7 @@
 # Applications ported from Niri
 "Mod+B" = { action = "spawn:zen", repeat = false }
 "Mod+Shift+E" = { action = "spawn:zeditor", repeat = false }
-"Mod+E" = { action = "spawn:nautilus", repeat = false }
+"Mod+E" = { action = "spawn:ghostty --class=org.yazi.file_chooser -e yazi", repeat = false }
 
 # Noctalia shell keybinds ported from Niri
 "Mod+Shift+W" = { action = "spawn:noctalia msg panel-toggle wallpaper", repeat = false }

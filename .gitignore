@@ -80,3 +80,12 @@ __pycache__/
 *.py[cod]
 .cache/
 node_modules/
+
+# ------------------------------------------------------------------------------
+# Yazi package-managed plugins & packages (managed via `ya pkg install` and package.toml)
+# Keep custom local plugins (smart-delete.yazi)
+# ------------------------------------------------------------------------------
+dot_config/yazi/plugins/*
+!dot_config/yazi/plugins/smart-delete.yazi/
+!dot_config/yazi/plugins/smart-delete.yazi/**
+dot_config/yazi/packages/

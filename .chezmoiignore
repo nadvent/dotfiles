@@ -32,6 +32,14 @@ Taskfile.yml
 **/LICENSE*
 
 # ------------------------------------------------------------------------------
+# Yazi package-managed plugins & packages (managed via `ya pkg install` and package.toml)
+# ------------------------------------------------------------------------------
+.config/yazi/plugins/*
+!.config/yazi/plugins/smart-delete.yazi
+!.config/yazi/plugins/smart-delete.yazi/**
+.config/yazi/packages/**
+
+# ------------------------------------------------------------------------------
 # Nested Git metadata (e.g. from cloned themes, plugins, or shaders)
 # ------------------------------------------------------------------------------
 **/.git

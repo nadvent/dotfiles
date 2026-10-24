@@ -1,0 +1,93 @@
+# ==============================================================================
+# Yazi Key Mappings (keymap.toml)
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Navigation & Quick Jump (Goto)
+# ------------------------------------------------------------------------------
+[[mgr.prepend_keymap]]
+on   = [ "g", "i" ]
+run  = "cd ~/Pictures"
+desc = "Go to Pictures"
+
+[[mgr.prepend_keymap]]
+on   = [ "g", "d" ]
+run  = "cd ~/Downloads/"
+desc = "Go to Downloads"
+
+[[mgr.prepend_keymap]]
+on   = [ "g", "c" ]
+run  = "cd ~/.config/"
+desc = "Go to Config"
+
+# ------------------------------------------------------------------------------
+# 2. File Opening & Execution
+# ------------------------------------------------------------------------------
+# Enter: Navigate directory or open file with $EDITOR
+[[mgr.prepend_keymap]]
+on   = [ "<Enter>" ]
+run  = "plugin --sync smart-enter"
+desc = "Enter directory or open file with $EDITOR"
+
+# Shift+Enter: Open with system default application (xdg-open / open)
+[[mgr.prepend_keymap]]
+on   = [ "<S-Enter>" ]
+run  = '''shell "sh -c 'for f; do (xdg-open \"$f\" >/dev/null 2>&1 || open \"$f\" >/dev/null 2>&1); done' -- %s" --orphan'''
+desc = "Open with system default app"
+
+# ------------------------------------------------------------------------------
+# 3. Archives & Compression (Ouch)
+# ------------------------------------------------------------------------------
+[[mgr.prepend_keymap]]
+on   = [ "C" ]
+run  = "plugin ouch"
+desc = "Compress with ouch"
+
+# ------------------------------------------------------------------------------
+# 4. Trash & Deletion Management
+# ------------------------------------------------------------------------------
+# Delete: sends to trash in normal folders, permanently deletes in trash
+[[mgr.prepend_keymap]]
+on   = [ "d" ]
+run  = "plugin --sync smart-delete"
+desc = "Trash file, or permanently delete if in trash"
+
+# Restore: Undo / restore deleted files via restore.yazi
+[[mgr.prepend_keymap]]
+on   = [ "u" ]
+run  = "plugin restore"
+desc = "Restore last deleted files/folders"
+
+[[mgr.prepend_keymap]]
+on   = [ "U" ]
+run  = "plugin restore -- --interactive"
+desc = "Restore deleted files/folders (Interactive)"
+
+# Restore selected files directly in trash (using Yazi's native trash service)
+[[mgr.prepend_keymap]]
+on   = [ "R" ]
+run  = 'shell "ya pub trash-restore --list %s"'
+desc = "Restore selected file(s) from trash"
+
+# ------------------------------------------------------------------------------
+# 5. Bookmarks Management (dedukun/bookmarks)
+# ------------------------------------------------------------------------------
+[[mgr.prepend_keymap]]
+on   = [ "m" ]
+run  = "plugin bookmarks save"
+desc = "Save current position as a bookmark"
+
+[[mgr.prepend_keymap]]
+on   = [ "'" ]
+run  = "plugin bookmarks jump"
+desc = "Jump to a bookmark"
+
+[[mgr.prepend_keymap]]
+on   = [ "b", "d" ]
+run  = "plugin bookmarks delete"
+desc = "Delete a bookmark"
+
+[[mgr.prepend_keymap]]
+on   = [ "b", "D" ]
+run  = "plugin bookmarks delete_all"
+desc = "Delete all bookmarks"

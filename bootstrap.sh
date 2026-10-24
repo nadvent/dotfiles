@@ -15,6 +15,7 @@ INSTALL_GUI=1
 INSTALL_RUST=1
 INSTALL_NODE=1
 INSTALL_PYTHON=1
+INSTALL_YAZI=1
 INSTALL_ASSETS=1
 SETUP_SERVICES=1
 
@@ -135,8 +136,8 @@ setup_cli_packages() {
         fish fastfetch atuin zoxide
         # Modern CLI alternatives (eza, bat, ripgrep, fd, dust, pydf)
         eza bat ripgrep fd dust pydf
-        # Terminal Editors & Managers
-        neovim yazi lazygit lazydocker github-cli
+        # Terminal Editors & Managers (+ companion previewers ouch, glow)
+        neovim yazi ouch glow lazygit lazydocker github-cli
     )
 
     install_packages "${CORE_PKGS[@]}"
@@ -278,7 +279,23 @@ setup_python() {
 }
 
 # ------------------------------------------------------------------------------
-# 8. Manage Custom Scripts, Desktop Files & Systemd Units
+# 8. Yazi Plugins & Dependencies
+# ------------------------------------------------------------------------------
+setup_yazi_plugins() {
+    log_step "Installing & Updating Yazi Plugins (package.toml)"
+
+    local YAZI_SCRIPT="${SCRIPT_DIR}/scripts/install-yazi-plugins.sh"
+    if [[ -x "${YAZI_SCRIPT}" ]]; then
+        run_cmd "${YAZI_SCRIPT}" --discard
+    elif command -v ya >/dev/null 2>&1; then
+        run_cmd ya pkg install --discard
+    else
+        log_warn "Yazi CLI 'ya' not available, skipping plugin installation."
+    fi
+}
+
+# ------------------------------------------------------------------------------
+# 9. Manage Custom Scripts, Desktop Files & Systemd Units
 # ------------------------------------------------------------------------------
 setup_assets_and_services() {
     log_step "Deploying Custom Scripts, Desktop Entries & User Services"
@@ -317,6 +334,7 @@ Options:
   --rust           Setup only Rust toolchain and cargo packages
   --node           Setup only Node.js and npm
   --python         Setup only Python and uv
+  --yazi           Install only Yazi plugins and companion tools
   --assets         Deploy only custom scripts and desktop entries
   --dry-run        Print commands that would be executed without running them
   -h, --help       Show this help message
@@ -338,13 +356,14 @@ parse_args() {
                 INSTALL_RUST=1
                 INSTALL_NODE=1
                 INSTALL_PYTHON=1
+                INSTALL_YAZI=1
                 INSTALL_ASSETS=1
                 SETUP_SERVICES=1
                 shift
                 ;;
             --cli)
                 if [[ "${explicit}" -eq 0 ]]; then
-                    INSTALL_CLI=1; INSTALL_GUI=0; INSTALL_RUST=0; INSTALL_NODE=0; INSTALL_PYTHON=0; INSTALL_ASSETS=0; SETUP_SERVICES=0; explicit=1
+                    INSTALL_CLI=1; INSTALL_GUI=0; INSTALL_RUST=0; INSTALL_NODE=0; INSTALL_PYTHON=0; INSTALL_YAZI=0; INSTALL_ASSETS=0; SETUP_SERVICES=0; explicit=1
                 else
                     INSTALL_CLI=1
                 fi
@@ -352,7 +371,7 @@ parse_args() {
                 ;;
             --gui)
                 if [[ "${explicit}" -eq 0 ]]; then
-                    INSTALL_CLI=0; INSTALL_GUI=1; INSTALL_RUST=0; INSTALL_NODE=0; INSTALL_PYTHON=0; INSTALL_ASSETS=0; SETUP_SERVICES=0; explicit=1
+                    INSTALL_CLI=0; INSTALL_GUI=1; INSTALL_RUST=0; INSTALL_NODE=0; INSTALL_PYTHON=0; INSTALL_YAZI=0; INSTALL_ASSETS=0; SETUP_SERVICES=0; explicit=1
                 else
                     INSTALL_GUI=1
                 fi
@@ -360,7 +379,7 @@ parse_args() {
                 ;;
             --rust)
                 if [[ "${explicit}" -eq 0 ]]; then
-                    INSTALL_CLI=0; INSTALL_GUI=0; INSTALL_RUST=1; INSTALL_NODE=0; INSTALL_PYTHON=0; INSTALL_ASSETS=0; SETUP_SERVICES=0; explicit=1
+                    INSTALL_CLI=0; INSTALL_GUI=0; INSTALL_RUST=1; INSTALL_NODE=0; INSTALL_PYTHON=0; INSTALL_YAZI=0; INSTALL_ASSETS=0; SETUP_SERVICES=0; explicit=1
                 else
                     INSTALL_RUST=1
                 fi
@@ -368,7 +387,7 @@ parse_args() {
                 ;;
             --node)
                 if [[ "${explicit}" -eq 0 ]]; then
-                    INSTALL_CLI=0; INSTALL_GUI=0; INSTALL_RUST=0; INSTALL_NODE=1; INSTALL_PYTHON=0; INSTALL_ASSETS=0; SETUP_SERVICES=0; explicit=1
+                    INSTALL_CLI=0; INSTALL_GUI=0; INSTALL_RUST=0; INSTALL_NODE=1; INSTALL_PYTHON=0; INSTALL_YAZI=0; INSTALL_ASSETS=0; SETUP_SERVICES=0; explicit=1
                 else
                     INSTALL_NODE=1
                 fi
@@ -376,9 +395,17 @@ parse_args() {
                 ;;
             --python)
                 if [[ "${explicit}" -eq 0 ]]; then
-                    INSTALL_CLI=0; INSTALL_GUI=0; INSTALL_RUST=0; INSTALL_NODE=0; INSTALL_PYTHON=1; INSTALL_ASSETS=0; SETUP_SERVICES=0; explicit=1
+                    INSTALL_CLI=0; INSTALL_GUI=0; INSTALL_RUST=0; INSTALL_NODE=0; INSTALL_PYTHON=1; INSTALL_YAZI=0; INSTALL_ASSETS=0; SETUP_SERVICES=0; explicit=1
                 else
                     INSTALL_PYTHON=1
+                fi
+                shift
+                ;;
+            --yazi)
+                if [[ "${explicit}" -eq 0 ]]; then
+                    INSTALL_CLI=0; INSTALL_GUI=0; INSTALL_RUST=0; INSTALL_NODE=0; INSTALL_PYTHON=0; INSTALL_YAZI=1; INSTALL_ASSETS=0; SETUP_SERVICES=0; explicit=1
+                else
+                    INSTALL_YAZI=1
                 fi
                 shift
                 ;;
@@ -443,6 +470,10 @@ EOF
 
     if [[ "${INSTALL_PYTHON}" -eq 1 ]]; then
         setup_python
+    fi
+
+    if [[ "${INSTALL_YAZI}" -eq 1 ]]; then
+        setup_yazi_plugins
     fi
 
     if [[ "${INSTALL_ASSETS}" -eq 1 ]]; then

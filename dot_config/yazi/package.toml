@@ -1,0 +1,27 @@
+[[plugin.deps]]
+use = "yazi-rs/plugins:piper"
+rev = "9166202"
+hash = "d1e0499cae5f3aeb628c267616d4b682"
+
+[[plugin.deps]]
+use = "dedukun/bookmarks"
+rev = "9ef1254"
+hash = "92fbb5483657fa7976cdf4e0104e18e0"
+
+[[plugin.deps]]
+use = "Ape/smart-enter"
+rev = "1c835cc"
+hash = "d6d6fa001c2cda9dda6eb5bc6beb96b7"
+
+[[plugin.deps]]
+use = "boydaihungst/restore"
+rev = "864dd05"
+hash = "3070b579618c4831f5d7ca4293c1c275"
+
+[[plugin.deps]]
+use = "ndtoan96/ouch"
+rev = "596b666"
+hash = "c2f4f4aca257dcceafa9e3b828dbf1c9"
+
+[flavor]
+deps = []
