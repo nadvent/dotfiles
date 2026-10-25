@@ -38,12 +38,6 @@ This repository contains my personal system configurations, custom helper script
 - **Keyboard Layers**: Kanata for vim-like motions and ergonomics on boot. There's navigation with Modifier (Meta, Ctrl, etc.) layers and symbol layers with remapped CapsLock button.
 - **Smooth Virtual Machine**: Near bare metal performance with **[GPU passthrough and native resolution with Looking Glass](https://gist.github.com/safwyls/96b6cf4b49e04af2668b7a77502e5ff2)** setup. Just edit the `/etc/default/limine` for the IOMMU and PCI ids to turn on or off, regenerate the boot entries, and reboot
 
-### 🎬 Desktop Tour & Showcase
-
-<p align="center">
-  <video src="pictures/Video.mp4" controls="controls" width="100%"></video>
-</p>
-
 ### 📸 Screenshots
 
 |      Terminal & Compositor (`Umbriel` + `Ghostty`)      |               Astra Music Player (`Astra`)                |
