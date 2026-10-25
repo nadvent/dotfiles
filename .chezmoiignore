@@ -13,6 +13,7 @@ CHANGELOG*
 CONTRIBUTING*
 docs/**
 .github/**
+pictures/**
 
 # ------------------------------------------------------------------------------
 # Bootstrap / installation scripts & task runners (repo-only)

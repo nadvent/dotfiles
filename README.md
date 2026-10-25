@@ -1,12 +1,14 @@
 # 🌌 Dotfiles
 
-> Personal dotfiles repository managed cleanly with [chezmoi](https://www.chezmoi.io/), configured for **Arch Linux / CachyOS**, featuring **Umbriel** Wayland compositor and **Noctalia** shell.
+> Personal dotfiles repository managed cleanly with [chezmoi](https://www.chezmoi.io/), configured for **Arch Linux / CachyOS** with **Limine** bootloader for automated snapshots and recovery, and featuring **Umbriel** Wayland compositor with **Noctalia** shell.
 
 ---
 
 ## 📑 Table of Contents
 
 - [Overview](#-overview)
+  - [Desktop Tour & Showcase](#-desktop-tour--showcase)
+  - [Screenshots](#-screenshots)
 - [Tools & Applications](#-tools--applications)
   - [Desktop & Compositor](#desktop--compositor)
   - [Terminal & Shell](#terminal--shell)
@@ -32,6 +34,31 @@ This repository contains my personal system configurations, custom helper script
 
 - **Reproducibility**: Automated bootstrapping across fresh Arch / CachyOS installations via `bootstrap.sh`.
 - **Separation of Concerns**: Non-interactive dotfiles are managed via Chezmoi, while repo-internal scripts, documentation, and sensitive files are filtered using `.chezmoiignore` and `.gitignore`.
+- **Dynamic theming**: Noctalia V5 with M3 Vibrant palette applied for Umbriel, Ghostty, Obsidian, Yazi, Zathura, Zen and specially customized [Neovim](https://github.com/nadvent/neovim-conf).
+- **Keyboard Layers**: Kanata for vim-like motions and ergonomics on boot. There's navigation with Modifier (Meta, Ctrl, etc.) layers and symbol layers with remapped CapsLock button.
+- **Smooth Virtual Machine**: Near bare metal performance with **[GPU passthrough and native resolution with Looking Glass](https://gist.github.com/safwyls/96b6cf4b49e04af2668b7a77502e5ff2)** setup. Just edit the `/etc/default/limine` for the IOMMU and PCI ids to turn on or off, regenerate the boot entries, and reboot
+
+### 🎬 Desktop Tour & Showcase
+
+<p align="center">
+  <video src="pictures/Video.mp4" controls="controls" width="100%"></video>
+</p>
+
+### 📸 Screenshots
+
+|      Terminal & Compositor (`Umbriel` + `Ghostty`)      |               Astra Music Player (`Astra`)                |
+| :-----------------------------------------------------: | :-------------------------------------------------------: |
+| [![Desktop Overview](pictures/01.png)](pictures/01.png) | [![Astra Music Player](pictures/02.png)](pictures/02.png) |
+|            **Notes Scratchpad (`Obsidian`)**            |          **Config Workflow (`Zed` / `Neovim`)**           |
+|  [![Obsidian Notes](pictures/03.png)](pictures/03.png)  | [![Config & Keybinds](pictures/04.png)](pictures/04.png)  |
+
+<details>
+<summary><b>🔍 View Extended Workspace (Zen Browser & Split Layout)</b></summary>
+<br/>
+
+[![Workspace Preview](pictures/05.png)](pictures/05.png)
+
+</details>
 
 ---
 
@@ -53,12 +80,14 @@ This repository contains my personal system configurations, custom helper script
 - **Shell**: [Fish](https://fishshell.com/) 3.6+ with universal variables, aliases, and abbreviations
 - **Prompts & Shell History**: [Fastfetch](https://github.com/fastfetch-cli/fastfetch), [Atuin](https://atuin.sh/) (shell history synchronization)
 - **Editor**: [Neovim](https://neovim.io/) & [Zed](https://zed.dev/) (`zeditor`)
+- **Fonts**: (14pt) LigaSF Mono Nerd Font and Maple Mono for _Italics_
 
 ### Development & Runtimes
 
 - **Rust**: Toolchain managed via `rustup` (`stable`), `rust-analyzer`, `clippy`, and `cargo-binstall`
 - **Node.js**: Node runtime, `npm`, `pnpm`
 - **Python**: [uv](https://astral.sh/uv) (fast Python package and environment manager)
+- **CMake & Ninja**: Cross-platform build system
 - **Polyglot Manager**: [mise](https://mise.jdx.dev/) for language runtime versioning
 
 ### Modern CLI Utilities
@@ -175,7 +204,7 @@ Two user systemd services run in the background to handle keyboard remapping and
 
 ### 1. Kanata (Keyboard Remapper)
 
-Remaps keys (such as CapsLock to Esc/Control) based on [kanata.kbd](file:///home/nazhanys/.local/share/chezmoi/dot_config/kanata/kanata.kbd).
+Remaps keys (such as CapsLock to Esc/Control) based on [kanata.kbd](file:///home/nazhanys/.local/share/chezmoi/dot_config/kanata/kanata.kbd). Do note that currently, I hard-fixed the keyboard device ids by name and I have a specific issue of having to combine two streams of keyboard input.
 
 1. Grant `uinput` permissions if not already present:
    ```bash
@@ -207,7 +236,7 @@ Allows browsers and applications (Zen, Chrome, Firefox) to trigger `Open Contain
 
 ---
 
-## ⌨️ Scratchpad & Keybind Example
+## ⌨️ Keybind Example
 
 Some Umbriel keybindings. See [`dot_config/umbriel/cfg/keybinds.toml`](file:///home/nazhanys/.local/share/chezmoi/dot_config/umbriel/cfg/keybinds.toml):
 
@@ -264,4 +293,4 @@ Use the asset management helper script:
 
 ## 📄 License
 
-This repository is maintained for personal use and shared under the [MIT License](LICENSE). Feel free to adapt and borrow configurations.
+This repository is maintained for personal use and shared under the [MIT License](LICENSE). Feel free to adapt and borrow the configurations!
