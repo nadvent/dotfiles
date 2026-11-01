@@ -71,6 +71,7 @@ shader = "../reading_mode.glsl"
 
 [effects]
 cursor = "trail"
+in_capture = true
 # border = "pulse"
 # screen = "reading_mode"
 
