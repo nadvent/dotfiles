@@ -246,7 +246,10 @@ Some Umbriel keybindings. See [`dot_config/umbriel/cfg/keybinds.toml`](file:///h
 | `Mod + Shift + E`      | Launch Zed Editor                                         |
 | `Mod + E`              | Launch Yazi File Manager                                  |
 | `Mod + F12`            | Toggle Audio Sink (Speakers ⟷ Behringer UMC204HD)         |
-| `Ctrl + Shift + 1/2/3` | Screenshot (Region / Fullscreen / Annotate)               |
+| `Print` / `Ctrl + Shift + 1` | Screenshot Region (`noctalia msg screenshot-region`)     |
+| `Shift + Print` / `Ctrl + Shift + 2` | Screenshot Fullscreen (`noctalia msg screenshot-fullscreen`) |
+| `Alt/Mod + Print`      | Screenshot Focused Window (`noctalia msg screenshot-window`) |
+| `Ctrl + Print` / `Ctrl + Shift + 3` | Screenshot & Annotate (`noctalia msg screenshot-annotate`) |
 
 ---
 

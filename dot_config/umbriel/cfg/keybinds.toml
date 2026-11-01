@@ -165,7 +165,12 @@
 "Mod+Ctrl+8" = "column-move-to-workspace:8"
 "Mod+Ctrl+9" = "column-move-to-workspace:9"
 
-# Screenshots ported from Niri
+# Screenshots (PrintScreen & Quick Shortcuts)
+"Print" = { action = "spawn:noctalia msg screenshot-region", repeat = false }
+"Shift+Print" = { action = "spawn:noctalia msg screenshot-fullscreen", repeat = false }
+"Alt+Print" = { action = "spawn:noctalia msg screenshot-window", repeat = false }
+"Mod+Print" = { action = "spawn:noctalia msg screenshot-window", repeat = false }
+"Ctrl+Print" = { action = "spawn:noctalia msg screenshot-annotate", repeat = false }
 "Ctrl+Shift+1" = { action = "spawn:noctalia msg screenshot-region", repeat = false }
 "Ctrl+Shift+2" = { action = "spawn:noctalia msg screenshot-fullscreen", repeat = false }
 "Ctrl+Shift+3" = { action = "spawn:noctalia msg screenshot-annotate", repeat = false }

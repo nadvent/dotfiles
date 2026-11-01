@@ -1,44 +1,44 @@
 [colors]
-background = "#ced2e8FF"
+background = "#c9d8eeFF"
 text_primary = "#18191bFF"
-text_muted = "#4a4a52FF"
-accent_primary = "#223bc3FF"
-accent_secondary = "#5429a3FF"
-warning = "#865f2dFF"
+text_muted = "#4d4f55FF"
+accent_primary = "#2265c3FF"
+accent_secondary = "#74a329FF"
+warning = "#612c87FF"
 error = "#fd4663FF"
-insert_hint = "#865f2d80"
-backdrop = "#b3b9dbFF"
+insert_hint = "#612c8780"
+backdrop = "#aac2e4FF"
 
 [colors.border]
-focused = "#223bc3FF"
-unfocused = "#b3b9dbFF"
-outer = "#dcdfefFF"
+focused = "#2265c3FF"
+unfocused = "#aac2e4FF"
+outer = "#d8e3f3FF"
 
 [colors.overview]
-background_tint = "#dcdfef88"
-badge = "#223bc3FF"
-workspace_background = "#dcdfefFF"
+background_tint = "#d8e3f388"
+badge = "#2265c3FF"
+workspace_background = "#d8e3f3FF"
 
 [colors.tab_bar]
-background = "#ced2e8FF"
-text = "#4a4a52FF"
-active = "#223bc3FF"
+background = "#c9d8eeFF"
+text = "#4d4f55FF"
+active = "#2265c3FF"
 active_text = "#f9fafaFF"
-active_unfocused = "#b3b9dbFF"
+active_unfocused = "#aac2e4FF"
 active_unfocused_text = "#18191bFF"
 urgent = "#fd4663FF"
 urgent_text = "#252626FF"
 
 [colors.title_bar]
-background = "#ced2e8FF"
-background_unfocused = "#dcdfefFF"
+background = "#c9d8eeFF"
+background_unfocused = "#d8e3f3FF"
 text = "#18191bFF"
-text_unfocused = "#4a4a52FF"
+text_unfocused = "#4d4f55FF"
 close = "#fd4663FF"
-maximize = "#223bc3FF"
-minimize = "#5429a3FF"
+maximize = "#2265c3FF"
+minimize = "#74a329FF"
 
 [[window_rule]]
 match.is_scratchpad = true
-border_color_focused = "#865f2dFF"
-border_color_unfocused = "#cab69cFF"
+border_color_focused = "#612c87FF"
+border_color_unfocused = "#b79bcaFF"
