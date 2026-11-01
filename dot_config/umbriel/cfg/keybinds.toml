@@ -57,7 +57,15 @@
 "Mod+Ctrl+Comma" = "window-consume-from-left"
 "Mod+Ctrl+Period" = "window-consume-from-right"
 # Needs layout.mode = "dwindle".
-# "Mod+Alt+T" = "layout-toggle-split"
+"Mod+Alt+T" = "layout-toggle-split"
+
+# Layout switching & mode management
+"Mod+Backslash" = "workspace-set-layout:toggle:scrolling,master,dwindle"
+"Mod+Alt+S" = "workspace-set-layout:scrolling"
+"Mod+Alt+M" = "workspace-set-layout:master"
+"Mod+Alt+D" = "workspace-set-layout:dwindle"
+"Mod+Shift+M" = "layout-master-count-increase"
+"Mod+Ctrl+M" = "layout-master-count-decrease"
 "Mod+W" = { action = "column-toggle-tabbed", repeat = false }
 "Mod+Alt+Right" = "column-focus-tab-next"
 "Mod+Alt+Left" = "column-focus-tab-previous"
@@ -168,3 +176,4 @@
 
 # Scripts
 "Mod+F12" = { action = "spawn:${XDG_BIN_HOME:-$HOME/.local/bin}/toggle-audio.sh", repeat = false }
+"Mod+Ctrl+R" = { action = "spawn:${XDG_BIN_HOME:-$HOME/.local/bin}/toggle-reading-mode.sh", repeat = false }

@@ -1,0 +1,224 @@
+#!/usr/bin/env python3
+import os
+import sys
+from pathlib import Path
+from typing import Any, Dict, Optional
+
+config_dir: Path = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+theme_file: Path = config_dir / "ghostty" / "themes" / "noctalia"
+toml_file: Path = config_dir / "umbriel" / "noctalia.toml"
+gtk_css_file: Path = config_dir / "ghostty" / "gtk.css"
+colors_css_file: Path = config_dir / "ghostty" / "colors.css"
+
+
+def parse_ghostty_theme(path: Path) -> Optional[Dict[str, Any]]:
+    theme: Dict[str, Any] = {"palette": {}}
+    if not path.exists():
+        return None
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if "=" in line:
+                k, v = line.split("=", 1)
+                k = k.strip()
+                v = v.strip()
+                if k == "palette":
+                    if "=" in v:
+                        idx, color = v.split("=", 1)
+                        theme["palette"][int(idx.strip())] = color.strip()
+                else:
+                    theme[k] = v
+    return theme
+
+
+theme: Optional[Dict[str, Any]] = parse_ghostty_theme(theme_file)
+if not theme:
+    sys.exit(0)
+
+toml_colors: Dict[str, Any] = {}
+if toml_file.exists():
+    try:
+        import tomllib
+
+        with open(toml_file, "rb") as f:
+            data: Dict[str, Any] = tomllib.load(f)
+            toml_colors = data.get("colors", {})
+    except Exception as e:
+        print(f"Warning: Could not parse toml file: {e}", file=sys.stderr)
+
+p: Dict[int, str] = theme.get("palette", {})
+bg: str = str(theme.get("background", toml_colors.get("background", "#f5d8d6")))[:7]
+fg: str = str(theme.get("foreground", toml_colors.get("text_primary", "#1b1818")))[:7]
+accent: str = str(toml_colors.get("accent_primary", p.get(2, "#801c17")))[:7]
+tab_border: str = str(p.get(8, "#9d7572"))
+tab_urgent: str = str(toml_colors.get("error", p.get(1, "#c6003d")))[:7]
+
+
+def lum(hex_val: str) -> float:
+    h: str = hex_val.lstrip("#")
+    if len(h) < 6:
+        return 0.5
+    r, g, b = [int(h[i : i + 2], 16) / 255.0 for i in (0, 2, 4)]
+
+    def adj(c: float) -> float:
+        return c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+
+    return 0.2126 * adj(r) + 0.7152 * adj(g) + 0.0722 * adj(b)
+
+
+def blend(c1_hex: str, c2_hex: str, alpha: float) -> str:
+    r1, g1, b1 = [int(c1_hex.lstrip("#")[i : i + 2], 16) for i in (0, 2, 4)]
+    r2, g2, b2 = [int(c2_hex.lstrip("#")[i : i + 2], 16) for i in (0, 2, 4)]
+    r: int = int(r1 * alpha + r2 * (1 - alpha))
+    g: int = int(g1 * alpha + g2 * (1 - alpha))
+    b: int = int(b1 * alpha + b2 * (1 - alpha))
+    return f"#{r:02x}{g:02x}{b:02x}"
+
+
+# Solid, opaque colors for tabs
+solid_inactive_bg: str = blend(fg, bg, 0.08)
+solid_hover_bg: str = blend(fg, bg, 0.16)
+
+# Dynamically calculate text colors for readability based on background luminosity
+inactive_text: str = "#ffffff" if lum(solid_inactive_bg) < 0.45 else "#000000"
+active_text: str = "#ffffff" if lum(accent) < 0.45 else "#000000"
+
+# Darker/lighter backdrop behind the tabs depending on theme
+is_light: bool = lum(bg) > 0.5
+tabbar_bg: str = blend("#000000", bg, 0.08) if is_light else blend("#000000", bg, 0.25)
+
+css_content: str = f"""/* ==========================================================================
+   Window Container Reset
+   ========================================================================== */
+window,
+window.background,
+.ghostty-window {{
+    border-radius: 0px;
+    box-shadow: none;
+    outline: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+}}
+
+/* ==========================================================================
+   Base Dynamic Theming
+   ========================================================================== */
+@define-color term_bg {bg};
+@define-color term_fg {fg};
+@define-color tab_inactive_bg {solid_inactive_bg};
+@define-color tab_hover_bg {solid_hover_bg};
+@define-color tab_inactive_fg {inactive_text};
+@define-color tab_active_bg {accent};
+@define-color tab_active_fg {active_text};
+@define-color tabbar_bg {tabbar_bg};
+@define-color tab_urgent_color {tab_urgent};
+
+/* ==========================================================================
+   Tab Bar Container
+   ========================================================================== */
+toolbarview,
+toolbarview > revealer,
+revealer.top-bar,
+windowhandle,
+tabbar,
+tabbar scrolledwindow,
+tabbar tabbox,
+tabbar widget.start-action,
+tabbar widget.end-action {{
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+}}
+
+tabbar {{
+    background-color: @tabbar_bg;
+    min-height: 28px;
+}}
+
+/* Hide Default Libadwaita Separators */
+tabbar tabbox separator {{ opacity: 0; min-width: 0; margin: 0; }}
+tabbar tabbox tab indicator {{ opacity: 0; min-height: 0; background: transparent; }}
+
+/* ==========================================================================
+   Inactive Tabs (Clean, Thin, Rectangular)
+   ========================================================================== */
+tabbar tabbox tab {{
+    min-height: 28px;
+    padding: 0 14px;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    background-color: @tab_inactive_bg;
+    color: @tab_inactive_fg;
+    font-family: 'Liga SFMono Nerd Font', monospace;
+    font-size: 12px;
+    transition: background-color 150ms ease;
+}}
+
+tabbar tabbox tab label {{
+    font-family: 'Liga SFMono Nerd Font', monospace;
+    font-size: 12px;
+    color: inherit;
+    padding: 0 4px;
+}}
+
+tabbar tabbox tab:hover:not(:selected) {{
+    background-color: @tab_hover_bg;
+}}
+
+/* ==========================================================================
+   Active Selected Tab
+   ========================================================================== */
+tabbar tabbox tab:selected {{
+    background-color: @tab_active_bg;
+    color: @tab_active_fg;
+    border-radius: 6px 6px 0 0;
+    border: none;
+    box-shadow: none;
+    margin: 0;
+    font-weight: 600;
+}}
+
+/* ==========================================================================
+   Tab Close Button
+   ========================================================================== */
+tabbar tabbox tab button.tab-close-button {{
+    min-width: 16px;
+    min-height: 16px;
+    padding: 2px;
+    margin-left: 6px;
+    border-radius: 9999px;
+    opacity: 0.60;
+    color: inherit;
+    transition: opacity 150ms ease, background-color 150ms ease;
+}}
+
+tabbar tabbox tab button.tab-close-button:hover {{
+    opacity: 1.0;
+    background-color: alpha(@tab_urgent_color, 0.40);
+    color: @tab_urgent_color;
+}}
+"""
+
+with open(gtk_css_file, "w", encoding="utf-8") as f:
+    f.write(css_content)
+
+colors_content: str = f"""/* Auto-generated from {theme_file} */
+@define-color term_bg {bg};
+@define-color term_fg {fg};
+@define-color tab_inactive_bg {solid_inactive_bg};
+@define-color tab_hover_bg {solid_hover_bg};
+@define-color tab_inactive_fg {inactive_text};
+@define-color tab_active_bg {accent};
+@define-color tab_active_fg {active_text};
+@define-color tabbar_bg {tabbar_bg};
+@define-color tab_urgent_color {tab_urgent};
+"""
+
+with open(colors_css_file, "w", encoding="utf-8") as f:
+    f.write(colors_content)

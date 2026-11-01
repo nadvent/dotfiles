@@ -20,6 +20,12 @@ on   = [ "g", "c" ]
 run  = "cd ~/.config/"
 desc = "Go to Config"
 
+[[mgr.prepend_keymap]]
+on   = [ "g", "p" ]
+run  = "cd ~/Projects/"
+desc = "Go to Projects"
+
+
 # ------------------------------------------------------------------------------
 # 2. File Opening & Execution
 # ------------------------------------------------------------------------------

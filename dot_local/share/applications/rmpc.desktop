@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=rmpc
+GenericName=Music Player
+Icon=audio-x-generic
+Comment=A modern, configurable, terminal based MPD Client with album art support
+Terminal=false
+TryExec=rmpc
+Exec=ghostty --class=com.mitchellh.ghostty.rmpc --title=rmpc -e rmpc
+Type=Application
+Categories=AudioVideo;Audio;Player;Music;ConsoleOnly;
+Keywords=Music;Audio;Player;MPD;
+StartupWMClass=com.mitchellh.ghostty.rmpc

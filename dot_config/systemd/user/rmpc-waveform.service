@@ -1,0 +1,14 @@
+[Unit]
+Description=RMPC Audio Waveform Daemon
+After=mpd.service
+PartOf=mpd.service
+
+[Service]
+Type=simple
+ExecStart=%h/.config/rmpc/scripts/waveform_daemon.py
+Restart=on-failure
+RestartSec=2
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=default.target

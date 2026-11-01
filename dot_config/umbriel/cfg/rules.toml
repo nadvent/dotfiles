@@ -16,14 +16,9 @@
 blur = true
 blur_optimized = false
 
-# Give scratchpad windows their own border colors.
-[[window_rule]]
-match.is_scratchpad = true
-border_color_focused = "#E5C07BFF"
-border_color_unfocused = "#5C4A2AFF"
 
 # ------------------------------------------------------------------------------
-# Application Window Rules
+# System & Utility Dialogs
 # ------------------------------------------------------------------------------
 
 [[window_rule]]
@@ -53,33 +48,10 @@ default_pinned = true
 match.app_id = "^steam_app_.*$"
 confine_pointer = true
 
-# Keep an application drawing while it is hidden on another workspace, for programs whose other work stalls without it.
+# Keep an application drawing while it is hidden on another workspace.
 [[window_rule]]
 match.app_id = "^obs$"
 background_render = true
-
-[[window_rule]]
-match.app_id = "^astra$"
-default_scratchpad = "music"
-
-[[window_rule]]
-match.app_id = '^(obsidian|md\.obsidian\.Obsidian)$'
-default_scratchpad = "notes"
-default_scrolling_extent = 0.4
-default_floating_size = { width = 0.4, height = 1.0 }
-default_position = { x = 0, y = 0, anchor = "left" }
-
-[[window_rule]]
-match.app_id = '^(ghostty-scratchpad|com\.mitchellh\.ghostty\.scratchpad)$'
-default_floating = true
-default_floating_size_px = { width = 1150, height = 750 }
-default_scratchpad = "terminal"
-
-[[window_rule]]
-match.app_id = "^qutebrowser-scratchpad$"
-default_floating = true
-default_floating_size_px = { width = 1150, height = 750 }
-default_scratchpad = "Quick Search"
 
 [[window_rule]]
 match.app_id = "^org\\.yazi\\.file_chooser$"
@@ -91,20 +63,93 @@ match.title = "^Yazi:"
 default_floating = true
 default_floating_size_px = { width = 1050, height = 680 }
 
+
+# ------------------------------------------------------------------------------
+# Core Applications & Layout Sizing
+# Primary display base layer usable height is 1150 px (1200 - 34 bar - 16 gaps).
+# Available horizontal span between gaps is 2117 px (2133 - 16 gaps).
+# ------------------------------------------------------------------------------
+
+# Ghostty Terminal:
+# Sized to roughly A4 aspect ratio (210/297 = 0.707) not including statuscolumn.
+# At 1150px height: A4 text body is ~813px. Adding Neovim statuscolumn (~40px)
+# gives exactly 853px (which equals 0.40 / 40% of the 2133px display width).
+[[window_rule]]
+match.app_id = "^com\\.mitchellh\\.ghostty$"
+default_scrolling_extent = 0.43
+default_scrolling_extent_px = 853
+default_floating_size_px = { width = 853, height = 1150 }
+
+# Neovide (GUI Neovim client)
 [[window_rule]]
 match.app_id = "^neovide$"
 blur = true
+default_scrolling_extent = 0.43
+default_scrolling_extent_px = 853
+default_floating_size_px = { width = 853, height = 1150 }
 
-# [[window_rule]]
-# match.app_id = "^com.mitchellh.ghostty$"
-# opacity = 0.70
+# Zen Browser:
+# Sized to 60% of display width (1280px, perfectly complementing Ghostty's 40%
+# so both can sit side-by-side without overflowing the 2133px display).
+[[window_rule]]
+match.app_id = "^zen$"
+default_scrolling_extent = 0.60
+default_scrolling_extent_px = 1280
 
-# Leave an application that draws its own corners and shadow undecorated.
-# [[window_rule]]
-# match.app_id = "^org[.]gnome[.]TextEditor$"
-# border_width = 0
-# corner_radius = 0
-# shadow = false
+# Zathura Document Viewer:
+# Sized to exact A4 aspect ratio (210/297 = 0.7071).
+# At base layer height of 1150px, pure A4 document width is 813px (~0.38 extent).
+[[window_rule]]
+match.app_id = '^(org\.pwmt\.zathura|zathura)$'
+default_scrolling_extent = 0.38
+default_scrolling_extent_px = 813
+default_floating_size_px = { width = 1018, height = 1150 }
+
+
+# ------------------------------------------------------------------------------
+# Scratchpads
+# Sidebars anchor at top_left { x = 8, y = 8 }, aligning with y=42 and height 1150
+# to seamlessly match the base layer tiled windows and outer 8px gaps.
+# ------------------------------------------------------------------------------
+
+# Music Scratchpad (rmpc)
+[[window_rule]]
+match.app_id = '^(rmpc|com\.mitchellh\.ghostty\.rmpc)$'
+default_floating = true
+default_floating_size_px = { width = 600, height = 1150 }
+default_position = { x = 8, y = 8, anchor = "top_left" }
+default_scratchpad = "music"
+
+[[window_rule]]
+match.title = "^rmpc$"
+default_floating = true
+default_floating_size_px = { width = 600, height = 1150 }
+default_position = { x = 8, y = 8, anchor = "top_left" }
+default_scratchpad = "music"
+
+# Notes Scratchpad (Obsidian)
+# Sized to A4 width (853px / 0.40 extent) and full 1150px vertical height.
+[[window_rule]]
+match.app_id = '^(obsidian|md\.obsidian\.Obsidian)$'
+default_scratchpad = "notes"
+default_scrolling_extent = 0.43
+default_floating_size_px = { width = 853, height = 1150 }
+default_position = { x = 8, y = 8, anchor = "top_left" }
+
+# Terminal Scratchpad (Ghostty scratchpad)
+[[window_rule]]
+match.app_id = '^(ghostty-scratchpad|com\.mitchellh\.ghostty\.scratchpad)$'
+default_floating = true
+default_floating_size_px = { width = 1150, height = 750 }
+default_scratchpad = "terminal"
+
+# Quick Search Scratchpad (Qutebrowser)
+[[window_rule]]
+match.app_id = "^qutebrowser-scratchpad$"
+default_floating = true
+default_floating_size_px = { width = 1280, height = 800 }
+default_scratchpad = "Quick Search"
+
 
 # ------------------------------------------------------------------------------
 # Layer Rules

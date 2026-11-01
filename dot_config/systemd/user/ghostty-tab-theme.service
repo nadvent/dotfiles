@@ -1,0 +1,6 @@
+[Unit]
+Description=Sync Ghostty tab colors from noctalia.toml
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/sync-ghostty-tab-theme

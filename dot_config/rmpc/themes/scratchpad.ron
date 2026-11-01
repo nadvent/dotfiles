@@ -1,0 +1,352 @@
+#![enable(implicit_some)]
+#![enable(unwrap_newtypes)]
+#![enable(unwrap_variant_newtypes)]
+(
+    default_album_art_path: None,
+    format_tag_separator: " • ",
+    multiple_tag_resolution_strategy: Last,
+
+    // Narrow 2-column browser ratio suited for a vertical scratchpad
+    browser_column_widths: [0, 42, 58],
+
+    // Rosé Pine Dawn Base Surfaces & Text
+    background_color: "#faf4ed",        // Base
+    text_color: "#575279",              // Text
+    header_background_color: "#faf4ed",
+    modal_background_color: "#fffaf3",  // Surface
+    modal_backdrop: true,
+
+    borders_style: (fg: "#cecacd"),              // Highlight High (soft border)
+    highlight_border_style: (fg: "#286983"),     // Pine (active pane border)
+    highlighted_item_style: (fg: "#b4637a", modifiers: "Bold"), // Love
+    current_item_style: (fg: "#f4ede8", bg: "#286983", modifiers: "Bold"), // Pine fill with light text
+    preview_label_style: (fg: "#ea9d34"),        // Gold
+    preview_metadata_group_style: (fg: "#ea9d34", modifiers: "Bold"),
+
+    tab_bar: (
+        active_style: (fg: "#f4ede8", bg: "#b4637a", modifiers: "Bold"), // Love
+        inactive_style: (fg: "#9893a5"),                                 // Muted
+    ),
+
+    symbols: (
+        song: "󰝚 ",
+        dir: "󰉋 ",
+        playlist: "󰲸 ",
+        marker: "▍",
+        ellipsis: "…",
+        song_style: (fg: "#b4637a"),
+        dir_style: (fg: "#286983"),
+        playlist_style: (fg: "#907aa9"),
+    ),
+
+    level_styles: (
+        info: (fg: "#f4ede8", bg: "#d7827e"),
+        warn: (fg: "#f4ede8", bg: "#ea9d34"),
+        error: (fg: "#f4ede8", bg: "#b4637a"),
+        debug: (fg: "#f4ede8", bg: "#56949f"),
+        trace: (fg: "#f4ede8", bg: "#907aa9"),
+    ),
+
+    progress_bar: (
+        symbols: ["─", "━", "●", "─", "─"],
+        track_style: (fg: "#dfdad9"),
+        elapsed_style: (fg: "#907aa9"), // Iris
+        thumb_style: (fg: "#b4637a"),   // Love
+    ),
+
+    scrollbar: (
+        symbols: ["│", "█", "▲", "▼"],
+        track_style: (fg: "#f2e9e1"),
+        ends_style: (fg: "#cecacd"),
+        thumb_style: (fg: "#56949f"),   // Foam
+    ),
+
+    // Rosé Pine Dawn Cava Spectrum Gradient
+    cava: (
+        bar_width: 2,
+        bar_spacing: 1,
+        orientation: Bottom,
+        bar_color: Gradient({
+            0: "#286983",    // Pine (bass)
+            35: "#56949f",   // Foam (mid-low)
+            70: "#ea9d34",   // Gold (mids)
+            85: "#d7827e",   // Rose (highs)
+            100: "#b4637a",  // Love (peaks)
+        }),
+    ),
+
+    // Compact 2-column song table for narrow scratchpad column
+    song_table_format: [
+        (
+            prop: (
+                kind: Group([
+                    (kind: Property(Artist), style: (fg: "#286983", modifiers: "Bold"), default: (kind: Text("Unknown"))),
+                    (kind: Text(" - "), style: (fg: "#9893a5")),
+                    (kind: Property(Title), style: (fg: "#575279"), default: (kind: Property(Filename))),
+                ]),
+            ),
+            width: "82%",
+            label: "Track",
+        ),
+        (
+            prop: (kind: Property(Duration), style: (fg: "#797593"), default: (kind: Text("--:--"))),
+            width: "18%",
+            alignment: Right,
+            label: "Time",
+        ),
+    ],
+
+    browser_song_format: [
+        (
+            kind: Group([
+                (kind: Property(Track)),
+                (kind: Text(". ")),
+            ]),
+        ),
+        (
+            kind: Property(Title),
+            default: (kind: Property(Filename)),
+        ),
+    ],
+
+    components: {
+        // Scrolling song title
+        "song_title": Pane(Property(
+            content: [
+                (
+                    kind: Property(Song(Title)),
+                    style: (fg: "#575279", modifiers: "Bold"),
+                    default: (kind: Text("No Track Playing"), style: (fg: "#9893a5", modifiers: "Bold")),
+                ),
+            ],
+            align: Center,
+            scroll_speed: 1,
+        )),
+
+        // Scrolling Artist • Album subtitle
+        "song_artist_album": Pane(Property(
+            content: [
+                (
+                    kind: Property(Song(Artist)),
+                    style: (fg: "#ea9d34", modifiers: "Bold"),
+                    default: (kind: Text("Unknown Artist"), style: (fg: "#9893a5")),
+                ),
+                (kind: Text(" • "), style: (fg: "#cecacd")),
+                (
+                    kind: Property(Song(Album)),
+                    style: (fg: "#797593"),
+                    default: (kind: Text("Unknown Album"), style: (fg: "#9893a5")),
+                ),
+            ],
+            align: Center,
+            scroll_speed: 1,
+        )),
+
+        // Visual media controls & playback modes row (phone scratchpad width)
+        "media_controls_row": Split(
+            direction: Horizontal,
+            panes: [
+                // Left: Playback mode toggles (Repeat, Random, Single, Consume)
+                (
+                    size: "32%",
+                    pane: Pane(Property(
+                        content: [
+                            (kind: Text(" ")),
+                            (kind: Property(Status(RepeatV2(
+                                on_label: " ",
+                                off_label: " ",
+                                on_style: (fg: "#ea9d34", modifiers: "Bold"),
+                                off_style: (fg: "#cecacd"),
+                            )))),
+                            (kind: Property(Status(RandomV2(
+                                on_label: " ",
+                                off_label: " ",
+                                on_style: (fg: "#ea9d34", modifiers: "Bold"),
+                                off_style: (fg: "#cecacd"),
+                            )))),
+                            (kind: Property(Status(ConsumeV2(
+                                on_label: " ",
+                                off_label: " ",
+                                oneshot_label: " ",
+                                on_style: (fg: "#ea9d34", modifiers: "Bold"),
+                                off_style: (fg: "#cecacd"),
+                                oneshot_style: (fg: "#b4637a", modifiers: "Dim"),
+                            )))),
+                            (kind: Property(Status(SingleV2(
+                                on_label: "󰑘 ",
+                                off_label: "󰑘 ",
+                                oneshot_label: "󰑘 ",
+                                on_style: (fg: "#ea9d34", modifiers: "Bold"),
+                                off_style: (fg: "#cecacd"),
+                                oneshot_style: (fg: "#b4637a", modifiers: "Bold"),
+                            )))),
+                        ],
+                        align: Left,
+                    )),
+                ),
+                // Center: Transport controls (Prev | Play/Pause | Next)
+                (
+                    size: "36%",
+                    pane: Pane(Property(
+                        content: [
+                            (kind: Text("󰒮  "), style: (fg: "#286983")),
+                            (kind: Property(Status(StateV2(
+                                playing_label: "",
+                                paused_label: "",
+                                stopped_label: "",
+                                playing_style: (fg: "#b4637a", modifiers: "Bold"),
+                                paused_style: (fg: "#ea9d34", modifiers: "Bold"),
+                                stopped_style: (fg: "#797593", modifiers: "Bold"),
+                            )))),
+                            (kind: Text("  󰒭"), style: (fg: "#286983")),
+                        ],
+                        align: Center,
+                    )),
+                ),
+                // Right: Volume percentage
+                (
+                    size: "32%",
+                    pane: Pane(Property(
+                        content: [
+                            (kind: Text("󰕾 "), style: (fg: "#56949f")),
+                            (kind: Property(Status(Volume)), style: (fg: "#575279", modifiers: "Bold")),
+                            (kind: Text("% "), style: (fg: "#56949f")),
+                        ],
+                        align: Right,
+                    )),
+                ),
+            ],
+        ),
+
+        // Progress bar + Elapsed / Duration row
+        "progress_row": Split(
+            direction: Horizontal,
+            panes: [
+                (
+                    size: "6",
+                    pane: Pane(Property(
+                        content: [
+                            (kind: Text(" ")),
+                            (kind: Property(Status(Elapsed)), style: (fg: "#797593")),
+                        ],
+                        align: Left,
+                    )),
+                ),
+                (
+                    size: "100%",
+                    pane: Pane(ProgressBar),
+                ),
+                (
+                    size: "6",
+                    pane: Pane(Property(
+                        content: [
+                            (kind: Property(Status(Duration)), style: (fg: "#797593")),
+                            (kind: Text(" ")),
+                        ],
+                        align: Right,
+                    )),
+                ),
+            ],
+        ),
+
+        // Combined Player Card used in Layout 1 (Player tab)
+        "player_controls_card": Split(
+            direction: Vertical,
+            panes: [
+                (size: "1", pane: Component("song_title")),
+                (size: "1", pane: Component("song_artist_album")),
+                (size: "1", pane: Component("media_controls_row")),
+                // Audio waveform seek display directly above playback progress
+                (size: "1", pane: Pane(Property(
+                    content: [
+                        (kind: Sticker("waveform"), style: (fg: "#907aa9")),
+                    ],
+                    align: Center,
+                ))),
+                (size: "1", pane: Component("progress_row")),
+            ],
+        ),
+
+        // Text Preview of Next Song (Rosé Pine Dawn styled)
+        "next_song_preview": Pane(Property(
+            content: [
+                (kind: Text(" 󰒭 Up Next: "), style: (fg: "#907aa9", modifiers: "Bold")),
+                (
+                    kind: Sticker("next_song"),
+                    style: (fg: "#575279"),
+                    default: (kind: Text("End of queue / Shuffle"), style: (fg: "#9893a5")),
+                ),
+            ],
+            align: Left,
+            scroll_speed: 1,
+        )),
+
+        // Compact top bar used in Layout 2 (Picker tab)
+        "compact_top_bar": Split(
+            direction: Vertical,
+            panes: [
+                (
+                    size: "1",
+                    pane: Split(
+                        direction: Horizontal,
+                        panes: [
+                            (
+                                size: "75%",
+                                pane: Pane(Property(
+                                    content: [
+                                        (kind: Text(" ")),
+                                        (kind: Property(Status(StateV2(
+                                            playing_label: " ",
+                                            paused_label: " ",
+                                            stopped_label: " ",
+                                            playing_style: (fg: "#b4637a", modifiers: "Bold"),
+                                            paused_style: (fg: "#ea9d34", modifiers: "Bold"),
+                                            stopped_style: (fg: "#797593", modifiers: "Bold"),
+                                        )))),
+                                        (kind: Property(Song(Artist)), style: (fg: "#286983", modifiers: "Bold"), default: (kind: Text("Unknown"))),
+                                        (kind: Text(" - "), style: (fg: "#9893a5")),
+                                        (kind: Property(Song(Title)), style: (fg: "#575279"), default: (kind: Text("No Song"))),
+                                    ],
+                                    align: Left,
+                                    scroll_speed: 1,
+                                )),
+                            ),
+                            (
+                                size: "25%",
+                                pane: Pane(Property(
+                                    content: [
+                                        (kind: Text("󰕾 "), style: (fg: "#56949f")),
+                                        (kind: Property(Status(Volume)), style: (fg: "#575279", modifiers: "Bold")),
+                                        (kind: Text("% "), style: (fg: "#56949f")),
+                                    ],
+                                    align: Right,
+                                )),
+                            ),
+                        ],
+                    ),
+                ),
+                (
+                    size: "1",
+                    pane: Component("progress_row"),
+                ),
+            ],
+        ),
+    },
+
+    // Outer layout: 1-row Tab bar at top + 100% TabContent below
+    layout: Split(
+        direction: Vertical,
+        panes: [
+            (
+                size: "1",
+                pane: Pane(Tabs),
+            ),
+            (
+                size: "100%",
+                pane: Pane(TabContent),
+            ),
+        ],
+    ),
+
+    header: (rows: []),
+)

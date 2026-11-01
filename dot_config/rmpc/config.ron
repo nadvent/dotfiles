@@ -1,0 +1,161 @@
+#![enable(implicit_some)]
+#![enable(unwrap_newtypes)]
+#![enable(unwrap_variant_newtypes)]
+(
+    address: "127.0.0.1:6600",
+    password: None,
+    theme: "scratchpad",
+    cache_dir: "/tmp/rmpc/cache",
+    lyrics_dir: "~/Music",
+    volume_step: 5,
+    max_fps: 60,
+    scrolloff: 2,
+    wrap_navigation: true,
+    enable_mouse: true,
+    enable_config_hot_reload: true,
+    status_update_interval_ms: 1000,
+    select_current_song_on_change: true,
+    center_current_song_on_change: true,
+
+    // Disabled to avoid sticker errors / stderr output
+    on_song_change: None,
+    exec_on_song_change_at_start: false,
+
+    album_art: (
+        method: Auto,
+        max_size_px: (width: 1000, height: 1000),
+        vertical_align: Center,
+        horizontal_align: Center,
+    ),
+
+    keybinds: (
+        global: {
+            // Instant toggle between the 2 layouts
+            "<Tab>": NextTab,
+            "<S-Tab>": PreviousTab,
+            "1": SwitchToTab("Player"),
+            "2": SwitchToTab("Picker"),
+
+            // Playback & volume controls
+            "p": TogglePause,
+            "s": Stop,
+            ">": NextTrack,
+            "<": PreviousTrack,
+            ".": VolumeUp,
+            ",": VolumeDown,
+            "f": SeekForward,
+            "b": SeekBack,
+            "z": ToggleRepeat,
+            "x": ToggleRandom,
+            "c": ToggleConsume,
+            "v": ToggleSingle,
+            "u": Update,
+            "~": ShowHelp,
+            "I": ShowCurrentSongInfo,
+            ":": CommandMode,
+            "q": Quit,
+        },
+        navigation: {
+            "k": Up,
+            "j": Down,
+            "h": Left,
+            "l": Right,
+            "<Up>": Up,
+            "<Down>": Down,
+            "<Left>": Left,
+            "<Right>": Right,
+            "<S-Up>": PaneUp,
+            "<S-Down>": PaneDown,
+            "<C-k>": PaneUp,
+            "<C-j>": PaneDown,
+            "<C-u>": UpHalf,
+            "<C-d>": DownHalf,
+            "g": Top,
+            "G": Bottom,
+            "<Space>": Select,
+            "<CR>": Confirm,
+            "a": Add,
+            "A": AddAll,
+            "/": EnterSearch,
+            "n": NextResult,
+            "N": PreviousResult,
+            "i": FocusInput,
+            "J": MoveDown,
+            "K": MoveUp,
+            "D": Delete,
+            "B": ShowInfo,
+            "<Esc>": Close,
+            "<C-c>": Close,
+        },
+        queue: {
+            "<CR>": Play,
+            "d": Delete,
+            "D": DeleteAll,
+            "C": JumpToCurrent,
+            "X": Shuffle,
+        },
+    ),
+
+    tabs: [
+        // LAYOUT 1: Vertical Player
+        (
+            name: "Player",
+            pane: Split(
+                direction: Vertical,
+                panes: [
+                    // 1. Album art constrained to ~40% of the column width
+                    (
+                        size: "0.45r",
+                        pane: Split(
+                            direction: Horizontal,
+                            panes: [
+                                (size: "100%", borders: "NONE", pane: Pane(AlbumArt)),
+                            ],
+                        ),
+                    ),
+                    // 2. Compact metadata, transport controls, and progress bar
+                    (
+                        size: "7",
+                        borders: "ALL",
+                        pane: Component("player_controls_card"),
+                    ),
+                    (
+                        size: "100%",
+                        borders: "ALL",
+                        border_title: [(kind: Text(" Up Next "))],
+                        pane: Pane(Queue),
+                    ),
+                ],
+            ),
+        ),
+
+        // LAYOUT 2: Library Picker & Queue Management
+        (
+            name: "Picker",
+            pane: Split(
+                direction: Vertical,
+                panes: [
+                    // Compact 2-line status bar at the top
+                    (
+                        size: "4",
+                        borders: "ALL",
+                        pane: Component("compact_top_bar"),
+                    ),
+                    // Upper half: Directories / song picker
+                    (
+                        size: "52%",
+                        borders: "ALL",
+                        pane: Pane(Directories),
+                    ),
+                    // Lower half: Queue table
+                    (
+                        size: "48%",
+                        borders: "ALL",
+                        border_title: [(kind: Text(" Queue "))],
+                        pane: Pane(Queue),
+                    ),
+                ],
+            ),
+        ),
+    ],
+)

@@ -4,4 +4,13 @@
 # ==============================================================================
 
 [general]
-autostart = ["noctalia", "ghostty", "kded6", "${XDG_BIN_HOME:-$HOME/.local/bin}/lg_vm.sh"]
+autostart = [
+  "noctalia",
+  "ghostty",
+  "kded6",
+  "${XDG_BIN_HOME:-$HOME/.local/bin}/lg_vm.sh",
+  # Managed by systemd: ~/.config/systemd/user/umbriel-scratchpad-autoclose.service
+  # "${XDG_BIN_HOME:-$HOME/.local/bin}/umbriel-scratchpad-autoclose",
+  # Managed by systemd: ~/.config/systemd/user/umbriel-layout-notify.service
+  # "${XDG_BIN_HOME:-$HOME/.local/bin}/umbriel-layout-notify",
+]

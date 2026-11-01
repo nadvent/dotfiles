@@ -12,3 +12,67 @@
 # effect = "workspace_wipe"
 # duration_ms = 300
 # curve = "easeout"
+[animation]
+enabled = true
+duration_ms = 220
+curve = "easeout"
+
+# Window Opening: Subtle scale-up from 90% with fade
+[animation.windows_in]
+enabled = true
+style = "popin"
+scale = 0.90
+curve = "spring:1,750"
+
+# Window Closing: Quick, subtle exit fade
+[animation.windows_out]
+enabled = true
+style = "popin"
+scale = 0.96
+curve = "spring:1,900"
+
+# Window Rearrangement & Reflow: Snappy and stable
+[animation.windows_move]
+enabled = true
+curve = "spring:1,800"
+
+[animation.windows_resize]
+enabled = true
+curve = "spring:1,800"
+
+# Workspace Switching: Smooth, non-jarring slide
+[animation.workspaces]
+enabled = true
+style = "slide"
+curve = "spring:1,750"
+
+# Overview & Filmstrip
+[animation.overview]
+enabled = true
+curve = "spring:1,800"
+workspace_curve = "spring:1,900"
+
+# Scratchpad: Moderate dimming with backdrop
+[animation.scratchpad]
+enabled = true
+curve = "spring:1,800"
+dim = 0.0
+blur = false
+
+# Modal Dialogs & Borders
+[animation.dialogs]
+enabled = true
+dim = 0.25
+
+[animation.border]
+enabled = true
+curve = "spring:1,900"
+
+# Optional: subtle dimming for unfocused windows (set dim = 0.0 to disable)
+[animation.dim_unfocused]
+enabled = false
+dim = 0.1
+
+# Keep drag physics off to prevent jelly/wobble effects
+[animation.windows_drag]
+physics = false

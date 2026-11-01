@@ -1,0 +1,101 @@
+#!/usr/bin/env python3
+"""
+Listens to Umbriel workspace events and notifies Noctalia when the layout changes.
+"""
+
+import json
+import subprocess
+import sys
+import time
+
+LAYOUT_NAMES = {
+    "scrolling": "Scrolling",
+    "dwindle": "Dwindle",
+    "master": "Master",
+    "floating": "Floating",
+    "stacking": "Stacking",
+}
+
+def notify_layout(layout_name):
+    title = f"Layout: {layout_name}"
+    # Send notification through Noctalia IPC
+    res = subprocess.run(
+        ["noctalia", "msg", "notification-show", title],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    if res.returncode != 0:
+        # Fallback to standard notification daemon
+        subprocess.run(
+            ["notify-send", "-a", "Umbriel", title],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+
+def watch_layout():
+    while True:
+        try:
+            proc = subprocess.Popen(
+                ["umbriel", "subscribe", "workspaces"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.DEVNULL,
+                text=True,
+                bufsize=1,
+            )
+        except Exception:
+            time.sleep(2)
+            continue
+
+        last_layout = None
+        last_ws_id = None
+
+        try:
+            for line in proc.stdout:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    msg = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+
+                if msg.get("event") != "workspaces":
+                    continue
+
+                data = msg.get("data", [])
+                focused_ws = None
+                for ws in data:
+                    if ws.get("focused") is True:
+                        focused_ws = ws
+                        break
+
+                if not focused_ws:
+                    continue
+
+                current_ws_id = focused_ws.get("id")
+                raw_layout = focused_ws.get("layout", "")
+                display_layout = LAYOUT_NAMES.get(raw_layout.lower(), raw_layout.capitalize() or "Unknown")
+
+                # Initial state connection: record without notifying
+                if last_layout is None:
+                    last_layout = raw_layout
+                    last_ws_id = current_ws_id
+                    continue
+
+                # Trigger notification when the layout changes
+                if raw_layout != last_layout:
+                    notify_layout(display_layout)
+                    last_layout = raw_layout
+                    last_ws_id = current_ws_id
+                elif current_ws_id != last_ws_id:
+                    last_ws_id = current_ws_id
+
+        except Exception:
+            pass
+        finally:
+            if proc.poll() is None:
+                proc.kill()
+            time.sleep(1)
+
+if __name__ == "__main__":
+    watch_layout()

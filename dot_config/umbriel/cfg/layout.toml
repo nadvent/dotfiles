@@ -3,35 +3,81 @@
 # https://docs.noctalia.dev/umbriel/layout/
 # ==============================================================================
 
-# New scrolling-layout windows start at half the output width. Without this
-# setting, each application chooses its starting width. Stacked columns retain
-# their most recently focused row when focus leaves and later returns.
 [layout]
-extent_presets = [0.333, 0.5, 0.667]
+# Default mode across workspaces ("scrolling", "master", "dwindle", or "floating").
+mode = "scrolling"
+gap = 8
+
+# Presets for cycling window widths:
+# 0.40  -> Ghostty A4 width (853 px on 2133w DP-1)
+# 0.60  -> Base layer Zen Browser width (1280 px on DP-1)
+# 0.667 -> Two-thirds center reading width
+# 1.0   -> Full available width
+extent_presets = [0.40, 0.60, 0.667, 1.0]
 
 # What a tiled window's own maximize button does: "column" fills the column,
-# "edges" fills the usable area without struts, gaps, or borders. The
-# window-toggle-maximize action is unaffected.
-# client_maximize = "column"
+# "edges" fills the usable area without struts, gaps, or borders.
+client_maximize = "column"
 
+# ------------------------------------------------------------------------------
+# Scrolling Layout
+# Columns arranged horizontally in a continuous ribbon.
+# ------------------------------------------------------------------------------
 [layout.scrolling]
-default_extent_fraction = 0.5
+# Keep the focused column locked dead center on the monitor at all times.
+center_focused = "always"
 
-# A tab group shows one window at a time below a bar of titles, and stacks and
-# resizes like any row of its column. Mod+W tabs the focused window with the
-# windows stacked beside it; Mod+Shift+J/K move a tab out of its group or a
-# window into one. Click, scroll, or drag a title to switch, reorder, or pull it
-# out.
-# [layout.tabs]
-# default_display = "normal"
-# new_tab_position = "after_active"
-# middle_click_closes = true
-#
-# [appearance.tab_bar]
-# style = "titles"         # "indicator" draws thin slots without titles
-# height = 24
-# font = "sans 10"
-# visible = true           # false hides every bar; tabs keep working
-# hide_when_single = false
-# max_tabs = 6            # show at most 6 slots; more tabs scroll
-# overflow = "scroll"      # or "shrink" to fit every tab
+# Default width for new windows (roughly 60-70% width, matching Zen on base layer).
+default_extent_fraction = 0.65
+
+# Center single or underfull strips rather than pinning them to the left margin.
+center_underfull_strip = true
+
+# Center the window selected in the overview.
+center_on_overview_select = true
+
+# ------------------------------------------------------------------------------
+# Master Layout
+# Master window on the left, stack of auxiliary windows on the right.
+# Ghostty acts as the master taking A4 proportions (40% width), while the
+# stack takes the remaining 60% (e.g. Zen Browser, documentation, logs).
+# ------------------------------------------------------------------------------
+[layout.master]
+position = "left"
+# 0.40 width corresponds to 853px on 2133px display (A4 aspect ratio at 1150h).
+default_width_fraction = 0.40
+# New windows go to the stack so Ghostty stays anchored as master.
+new_becomes_master = false
+# New windows appear at the top of the stack.
+new_on_top = true
+
+# ------------------------------------------------------------------------------
+# Dwindle Layout
+# Binary space partitioning layout where splits alternate orientation.
+# Ideal for a development dashboard / cockpit workspace.
+# ------------------------------------------------------------------------------
+[layout.dwindle]
+# Preserve split ratios when closing windows so layout doesn't violently reorganize.
+preserve_split = true
+# Predictable splitting: based on layout tree rather than cursor position.
+new_toward_cursor = false
+
+# ------------------------------------------------------------------------------
+# Stacking & Tabbed Columns
+# Combine windows into stacked tab groups within any column or master stack.
+# ------------------------------------------------------------------------------
+[layout.tabs]
+default_display = "normal"
+new_tab_position = "after_active"
+middle_click_closes = true
+scroll_switches_tabs = true
+wrap_focus = true
+
+[appearance.tab_bar]
+style = "titles"         # "indicator" draws thin slots without titles
+height = 24
+font = "sans 10"
+visible = true           # false hides every bar; tabs keep working
+hide_when_single = false
+max_tabs = 6            # show at most 6 slots; more tabs scroll
+overflow = "scroll"      # or "shrink" to fit every tab

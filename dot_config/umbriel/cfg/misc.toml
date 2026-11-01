@@ -22,7 +22,7 @@ spawn_when_empty = "obsidian"
 
 [[scratchpad]]
 name = "music"
-spawn_when_empty = "astra"
+spawn_when_empty = "gtk-launch rmpc"
 
 [[scratchpad]]
 name = "Quick Search"
@@ -37,12 +37,27 @@ spawn_when_empty = "ghostty-scratchpad"
 # Blur uses a smaller radius than the built-in default.
 # https://docs.noctalia.dev/umbriel/appearance/
 # ------------------------------------------------------------------------------
+
+[appearance]
+prefer_no_csd = true
+border_width = 0       # Set main border to 0 to rely purely on the shadow
+outer_border_width = 0 # Eliminates the harsh second border line
+corner_radius = 10     # Softens window edges for a cleaner aesthetic
+
+[appearance.shadow]
+enabled = true
+softness = 5      # Controls the blur/spread size of the shadow
+offset_x = 0       # Set to 0 for an even glow/border look on all sides
+offset_y = 2       # Small vertical offset to mimic a top-down light source
+
 [appearance.blur]
 radius = 3
 
 # Choose the background color shown if the lock screen takes too long to appear.
-# [colors]
-# backdrop = "#000000FF"
+
+[colors]
+# A semi-transparent black or dark tone creates the perfect depth effect
+ 
 
 # ------------------------------------------------------------------------------
 # Effects
@@ -50,9 +65,14 @@ radius = 3
 # scale with overview zoom. Include a bundled preset, then select it by name.
 # https://docs.noctalia.dev/umbriel/effects/
 # ------------------------------------------------------------------------------
+[effects.preset.reading_mode]
+kind = "screen"
+shader = "../reading_mode.glsl"
+
 [effects]
 cursor = "trail"
 # border = "pulse"
+# screen = "reading_mode"
 
 # ------------------------------------------------------------------------------
 # Screencast

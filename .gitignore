@@ -89,3 +89,9 @@ dot_config/yazi/plugins/*
 !dot_config/yazi/plugins/smart-delete.yazi/
 !dot_config/yazi/plugins/smart-delete.yazi/**
 dot_config/yazi/packages/
+
+# ------------------------------------------------------------------------------
+# Third-party / vendored clones in dotfiles
+# ------------------------------------------------------------------------------
+dot_config/rmpc/rmpc/
+dot_config/rmpc/rosepine-dawn/

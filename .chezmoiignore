@@ -62,6 +62,25 @@ Taskfile.yml
 **/*.swn
 **/.*.swp
 **/.*.swo
+**/*.log
+**/__pycache__/**
+
+# ------------------------------------------------------------------------------
+# Media & runtime daemon caches (MPD, RMPC)
+# ------------------------------------------------------------------------------
+.config/mpd/database
+.config/mpd/state
+.config/mpd/sticker.sql
+.config/mpd/log
+.config/mpd/pid
+.config/rmpc/rmpc/**
+.config/rmpc/rosepine-dawn/**
+
+# ------------------------------------------------------------------------------
+# Dynamically generated assets
+# ------------------------------------------------------------------------------
+.config/ghostty/colors.css
+.config/ghostty/gtk.css
 
 # ------------------------------------------------------------------------------
 # OS & System metadata

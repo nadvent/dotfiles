@@ -1,0 +1,10 @@
+[Unit]
+Description=Watch themes/noctalia for Ghostty tab color updates
+
+[Path]
+PathModified=%h/.config/ghostty/themes/noctalia
+PathModified=%h/.config/umbriel/noctalia.toml
+Unit=ghostty-tab-theme.service
+
+[Install]
+WantedBy=paths.target

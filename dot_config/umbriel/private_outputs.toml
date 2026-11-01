@@ -4,6 +4,7 @@
 
 [output."BOE 0x0AA8 Unknown"]
 position = [2133, 0]
+scale = 2
 
 [output."Samsung Electric Company Odyssey G60SD HNAX500014"]
 mode = "2560x1440@119.999"

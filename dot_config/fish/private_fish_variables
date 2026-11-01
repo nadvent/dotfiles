@@ -3,7 +3,7 @@
 SETUVAR __done_min_cmd_duration:10000
 SETUVAR __done_notification_urgency_level:low
 SETUVAR _fisher_upgraded_to_4_4:\x1d
-SETUVAR fish_user_paths:/home/nazhanys/\x2elocal/share/cargo/bin\x1e/home/nazhanys/\x2elocal/bin\x1e/home/nazhanys/\x2ecargo/bin
+SETUVAR fish_user_paths:/home/nazhanys/\x2econfig/emacs/bin\x1e/home/nazhanys/\x2elocal/share/cargo/bin\x1e/home/nazhanys/\x2elocal/bin\x1e/home/nazhanys/\x2ecargo/bin
 SETUVAR pure_begin_prompt_with_current_directory:true
 SETUVAR pure_check_for_new_release:false
 SETUVAR pure_color_at_sign:pure_color_mute

@@ -1,21 +1,32 @@
 # Font
-font-family = "Liga SFMono Nerd Font"
-font-size = 14
+# font-family = "Monaspace Xenon NF"
+# font-size = 13
+font-family = "LigaSF Mono NF"
+font-size = 13
 font-style = "Medium"
 font-family-italic = "Maple Mono"
 font-family-bold-italic = "Maple Mono"
 font-style-italic = "Italic"
 font-style-bold-italic = "SemiBold Italic"
 
-# Theme & Window
-theme = noctalia
+# Theme & Window theme = noctalia
 background-opacity = 0.88
 window-width = 115
 window-height = 45
 window-padding-y = 0
 window-padding-x = 0
+window-padding-balance = true
+window-padding-color = extend-always
+window-decoration = none
+gtk-titlebar = false
+gtk-wide-tabs = false
+window-show-tab-bar = always
+gtk-custom-css = ~/.config/ghostty/gtk.css
 macos-titlebar-style = hidden
 macos-titlebar-proxy-icon = hidden
+
+adjust-cell-height = 28%
+adjust-cursor-height = 28%
 
 # Mouse & Cursor
 mouse-hide-while-typing = true
@@ -72,3 +83,4 @@ keybind = alt+down=resize_split:down,10
 # Keybindings - Prompt Navigation
 keybind = alt+b=jump_to_prompt:-1
 keybind = alt+f=jump_to_prompt:1
+theme = noctalia
