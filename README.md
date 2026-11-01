@@ -40,17 +40,18 @@ This repository contains my personal system configurations, custom helper script
 
 ### 📸 Screenshots
 
-| 🌌 Desktop Overview & RMPC Player (`rmpc` + `Ghostty`) | 📖 E-Ink Reading Mode Shader (`Umbriel` + `Zathura`) |
-| :----------------------------------------------------: | :--------------------------------------------------: |
-| [![Desktop & RMPC](pictures/01.png)](pictures/01.png)   | [![Reading Mode](pictures/02.png)](pictures/02.png)  |
-| **⚡ Control Center & Notes Scratchpad (`Obsidian`)**    | **🎨 Noctalia Wallpaper & Dynamic Theme Engine**     |
-| [![Control Center](pictures/03.png)](pictures/03.png)   | [![Wallpaper Picker](pictures/04.png)](pictures/04.png) |
+| 🌌 Desktop Overview & RMPC Player (`rmpc` + `Ghostty`) |  📖 E-Ink Reading Mode Shader (`Umbriel` + `Zathura`)   |
+| :----------------------------------------------------: | :-----------------------------------------------------: |
+| [![Desktop & RMPC](pictures/01.png)](pictures/01.png)  |   [![Reading Mode](pictures/02.png)](pictures/02.png)   |
+| **⚡ Control Center & Notes Scratchpad (`Obsidian`)**  |    **🎨 Noctalia Wallpaper & Dynamic Theme Engine**     |
+| [![Control Center](pictures/03.png)](pictures/03.png)  | [![Wallpaper Picker](pictures/04.png)](pictures/04.png) |
 
 > **Highlights from my setup:**
-> - **01 · Daily Driver & Music**: Ghostty running my custom `rmpc` vertical scratchpad (album art, live waveform seekbar, Rosé Pine Dawn styling), fastfetch telemetry, and Zen Browser bathed in Noctalia's dynamic M3 palette.
-> - **02 · E-Ink Paper Shader**: Long writing and study sessions without eye fatigue. My custom `reading_mode.glsl` compositor shader converts any window or full screen into textured e-ink paper with physical grain and Bayer dithering.
-> - **03 · Frictionless Scratchpads**: Noctalia's floating Control Center (`Mod+S`) gives me instant access to media, audio outputs, and toggles, while my vim-powered Obsidian notes (`Mod+N`) stay one keystroke away.
-> - **04 · Instant Aesthetics**: The Noctalia wallpaper manager (`Mod+Shift+W`) lets me visually pick wallpapers and automatically generates matching color palettes across the compositor, terminal, editor, and UI widgets.
+>
+> - **01 · Daily Driver & Music**: Ghostty running custom `rmpc` vertical scratchpad (album art, live waveform seekbar, Rosé Pine Dawn styling), fastfetch telemetry, and Zen Browser bathed in Noctalia's dynamic M3 palette.
+> - **02 · E-Ink Paper Shader**: Long writing and study sessions without eye fatigue. Implemented `reading_mode.glsl` compositor shader converts any window or full screen into textured e-ink paper with physical grain and Bayer dithering.
+> - **03 · Togglable Scratchpads**: Very useful for global apps to persist across workspaces. Used for quick access to qutebrowser, Obsidian(TODO), Music player, terminal.
+> - **04 · Instant Aesthetics**: The Noctalia wallpaper manager (`Mod+Shift+W`) to visually pick wallpapers and automatically generates matching color palettes across the compositor, terminal, editor, and UI widgets.
 
 ---
 
@@ -73,7 +74,7 @@ This repository contains my personal system configurations, custom helper script
 - **Shell**: [Fish](https://fishshell.com/) 3.6+ with universal variables, aliases, and abbreviations
 - **Prompts & Shell History**: [Fastfetch](https://github.com/fastfetch-cli/fastfetch), [Atuin](https://atuin.sh/) (shell history synchronization)
 - **Editor**: [Neovim](https://neovim.io/) & [Zed](https://zed.dev/) (`zeditor`)
-- **Fonts**: (14pt) LigaSF Mono Nerd Font and Maple Mono for _Italics_
+- **Fonts**: (13pt) LigaSF Mono Nerd Font and Maple Mono for _Italics_. Occasionally Monaspace Xenon for Maths writing.
 
 ### Development & Runtimes
 
@@ -103,14 +104,14 @@ This repository contains my personal system configurations, custom helper script
 
 Custom scripts located in `~/.local/bin/` (tracked in `dot_local/bin/`):
 
-- `escape-scratchpad`: Queries active Umbriel scratchpad surfaces via `umbriel windows --json` and dismisses them.
-- `ghostty-scratchpad`: Dedicated instance with custom scratchpad configuration and window class.
+- `escape-scratchpad`: Dismisses all scratchpads with.
+- `ghostty-scratchpad`: Quick access terminal.
 - `qutebrowser-scratchpad`: Togglable floating browser window for quick searches.
 - `sync-ghostty-tab-theme`: Dynamically parses Noctalia palettes and updates Ghostty tab styling and GTK CSS to match the active theme.
-- `toggle-reading-mode.sh`: Toggles the e-ink paper screen shader in Umbriel on the fly with desktop notifications.
-- `umbriel-layout-notify`: Real-time notification daemon alerting on Umbriel workspace layout mode changes.
-- `umbriel-scratchpad-autoclose`: Automatically clears the dimmed background when scratchpad windows exit.
-- `toggle-audio.sh`: Quick audio output toggle between Desktop Speakers and Behringer UMC204HD audio interface with desktop notifications.
+- `toggle-reading-mode.sh`: Toggles the e-ink paper screen shader in Umbriel.
+- `umbriel-layout-notify`: Real-time notification daemon for tiling modes.
+- `umbriel-scratchpad-autoclose`: Automatically clears the scratchpad space if no apps are active.
+- `toggle-audio.sh`: Quick audio output toggle between Desktop Speakers and Behringer UMC204HD audio interface.
 - `lg_vm.sh`: Background loop detecting shared memory `/dev/shm/looking-glass` to auto-launch Looking Glass client.
 - `yazi-filemanager1`: Python D-Bus daemon implementing `org.freedesktop.FileManager1` for Yazi file choosing.
 - `waveform_daemon.py`: Background daemon extracting audio waveform peaks via ffmpeg and updating MPD stickers for rmpc (in `dot_config/rmpc/scripts/`).
@@ -126,10 +127,6 @@ Custom scripts located in `~/.local/bin/` (tracked in `dot_local/bin/`):
 ├── README.md
 ├── bootstrap.sh
 ├── pictures/
-│   ├── 01.png                   # Desktop Overview & RMPC Player
-│   ├── 02.png                   # E-Ink Reading Mode Shader
-│   ├── 03.png                   # Control Center & Obsidian Scratchpad
-│   └── 04.png                   # Wallpaper & Dynamic Theme Engine
 ├── scripts/
 │   ├── install-yazi-plugins.sh  # Install/sync Yazi plugins from package.toml
 │   └── manage-assets.sh         # Script to inventory, import, and run scripts & .desktop files
@@ -245,23 +242,23 @@ Allows browsers and applications (Zen, Chrome, Firefox) to trigger `Open Contain
 
 Some Umbriel keybindings. See [`dot_config/umbriel/cfg/keybinds.toml`](file:///home/nazhanys/.local/share/chezmoi/dot_config/umbriel/cfg/keybinds.toml):
 
-| Keybinding             | Action / Command                                          |
-| :--------------------- | :-------------------------------------------------------- |
-| `Mod`                  | Toggle Noctalia Application Launcher                      |
-| `Mod + Return`         | Toggle Terminal Scratchpad (`ghostty-scratchpad`)         |
-| `Mod + Space`          | Toggle Quick Search Scratchpad (`qutebrowser-scratchpad`) |
-| `Mod + N`              | Toggle Notes Scratchpad (`obsidian`)                      |
-| `Mod + M`              | Toggle Music Scratchpad (`astra`)                         |
-| `Mod + Escape`         | Dismiss / hide any currently visible scratchpad           |
-| `Mod + B`              | Launch Zen Browser                                        |
-| `Mod + Shift + E`      | Launch Zed Editor                                         |
-| `Mod + E`              | Launch Yazi File Manager                                  |
-| `Mod + Ctrl + R`       | Toggle E-Ink Paper Reading Mode Shader (`toggle-reading-mode.sh`) |
-| `Mod + F12`            | Toggle Audio Sink (Speakers ⟷ Behringer UMC204HD)         |
-| `Print` / `Ctrl + Shift + 1` | Screenshot Region (`noctalia msg screenshot-region`)     |
-| `Shift + Print` / `Ctrl + Shift + 2` | Screenshot Fullscreen (`noctalia msg screenshot-fullscreen`) |
-| `Alt/Mod + Print`      | Screenshot Focused Window (`noctalia msg screenshot-window`) |
-| `Ctrl + Print` / `Ctrl + Shift + 3` | Screenshot & Annotate (`noctalia msg screenshot-annotate`) |
+| Keybinding                           | Action / Command                                                  |
+| :----------------------------------- | :---------------------------------------------------------------- |
+| `Mod`                                | Toggle Noctalia Application Launcher                              |
+| `Mod + Return`                       | Toggle Terminal Scratchpad (`ghostty-scratchpad`)                 |
+| `Mod + Space`                        | Toggle Quick Search Scratchpad (`qutebrowser-scratchpad`)         |
+| `Mod + N`                            | Toggle Notes Scratchpad (`obsidian`)                              |
+| `Mod + M`                            | Toggle Music Scratchpad (`astra`)                                 |
+| `Mod + Escape`                       | Dismiss / hide any currently visible scratchpad                   |
+| `Mod + B`                            | Launch Zen Browser                                                |
+| `Mod + Shift + E`                    | Launch Zed Editor                                                 |
+| `Mod + E`                            | Launch Yazi File Manager                                          |
+| `Mod + Ctrl + R`                     | Toggle E-Ink Paper Reading Mode Shader (`toggle-reading-mode.sh`) |
+| `Mod + F12`                          | Toggle Audio Sink (Speakers ⟷ Behringer UMC204HD)                 |
+| `Print` / `Ctrl + Shift + 1`         | Screenshot Region (`noctalia msg screenshot-region`)              |
+| `Shift + Print` / `Ctrl + Shift + 2` | Screenshot Fullscreen (`noctalia msg screenshot-fullscreen`)      |
+| `Alt/Mod + Print`                    | Screenshot Focused Window (`noctalia msg screenshot-window`)      |
+| `Ctrl + Print` / `Ctrl + Shift + 3`  | Screenshot & Annotate (`noctalia msg screenshot-annotate`)        |
 
 ---
 
