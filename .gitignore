@@ -91,7 +91,20 @@ dot_config/yazi/plugins/*
 dot_config/yazi/packages/
 
 # ------------------------------------------------------------------------------
-# Third-party / vendored clones in dotfiles
+# Third-party / vendored clones, binaries & runtime state
 # ------------------------------------------------------------------------------
 dot_config/rmpc/rmpc/
 dot_config/rmpc/rosepine-dawn/
+dot_config/rmpc/bin/
+*.o
+dot_config/mpd/database
+dot_config/mpd/state
+dot_config/mpd/sticker.sql
+dot_config/mpd/log
+dot_config/mpd/pid
+dot_config/mpd/playlists/
+
+# Agent local instructions
+**/GEMINI.md
+GEMINI.md
+.agents/

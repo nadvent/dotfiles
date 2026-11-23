@@ -15,22 +15,32 @@ xwayland_xsettings = true
 
 # ------------------------------------------------------------------------------
 # Scratchpads
+#   hide_when_empty = true    # Hide scratchpad when its last window closes
+#   proportional_size = true  # Preserve window size proportions when moving between monitors
 # ------------------------------------------------------------------------------
 [[scratchpad]]
 name = "notes"
 spawn_when_empty = "obsidian"
+hide_when_empty = true
+proportional_size = true
 
 [[scratchpad]]
 name = "music"
-spawn_when_empty = "gtk-launch rmpc"
+spawn_when_empty = "/home/nazhanys/.config/rmpc/scripts/launch_rmpc.sh"
+hide_when_empty = true
+proportional_size = true
 
 [[scratchpad]]
 name = "Quick Search"
 spawn_when_empty = "qutebrowser-scratchpad"
+hide_when_empty = true
+proportional_size = true
 
 [[scratchpad]]
 name = "terminal"
 spawn_when_empty = "ghostty-scratchpad"
+hide_when_empty = true
+proportional_size = true
 
 # ------------------------------------------------------------------------------
 # Appearance

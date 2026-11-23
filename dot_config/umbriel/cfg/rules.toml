@@ -84,9 +84,8 @@ default_floating_size_px = { width = 853, height = 1150 }
 [[window_rule]]
 match.app_id = "^neovide$"
 blur = true
-default_scrolling_extent = 0.43
-default_scrolling_extent_px = 853
-default_floating_size_px = { width = 853, height = 1150 }
+default_scrolling_extent = 0.60
+default_scrolling_extent_px = 1280
 
 # Zen Browser:
 # Sized to 60% of display width (1280px, perfectly complementing Ghostty's 40%
@@ -114,11 +113,14 @@ default_floating_size_px = { width = 1018, height = 1150 }
 
 # Music Scratchpad (rmpc)
 [[window_rule]]
-match.app_id = '^(rmpc|com\.mitchellh\.ghostty\.rmpc)$'
+match.app_id = '^(rmpc|rmpc\.scratchpad|com\.mitchellh\.ghostty\.rmpc)$'
 default_floating = true
 default_floating_size_px = { width = 600, height = 1150 }
 default_position = { x = 8, y = 8, anchor = "top_left" }
 default_scratchpad = "music"
+title_bar = "off"
+default_focused = true
+dim_behind = 0.3
 
 [[window_rule]]
 match.title = "^rmpc$"
@@ -126,6 +128,29 @@ default_floating = true
 default_floating_size_px = { width = 600, height = 1150 }
 default_position = { x = 8, y = 8, anchor = "top_left" }
 default_scratchpad = "music"
+title_bar = "off"
+default_focused = true
+dim_behind = 0.3
+
+# Music Minipickers (Playlist Picker & Visual Search)
+[[window_rule]]
+match.app_id = '^org\.rmpc\.minipicker$'
+default_floating = true
+default_floating_size_px = { width = 500, height = 440 }
+default_position = { x = 58, y = 363, anchor = "top_left" }
+default_scratchpad = "music"
+title_bar = "off"
+default_focused = true
+
+[[window_rule]]
+match.app_id = '^org\.rmpc\.minipicker$'
+match.title = '^rmpc-minipicker: Search$'
+default_floating = true
+default_floating_size_px = { width = 560, height = 680 }
+default_position = { x = 28, y = 243, anchor = "top_left" }
+default_scratchpad = "music"
+title_bar = "off"
+default_focused = true
 
 # Notes Scratchpad (Obsidian)
 # Sized to A4 width (853px / 0.40 extent) and full 1150px vertical height.
@@ -161,3 +186,7 @@ blur = true
 blur_ignore_alpha = 0.5
 blur_popups = true
 blur_optimized = false
+
+[[layer_rule]]
+match.namespace = "^noctalia-(panel|attached-panel)$"
+dim_behind = 0.25

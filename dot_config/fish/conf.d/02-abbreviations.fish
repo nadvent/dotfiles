@@ -1,7 +1,7 @@
 if status is-interactive
 
     # =========================================================================
-    # 1. Neovim Ergonomics
+    # 1. Neovim
     # =========================================================================
     abbr -a v 'nvim'
     abbr -a vi 'nvim'
@@ -18,7 +18,7 @@ if status is-interactive
     abbr -a pac 'sudo pacman -S'                        # Install
     abbr -a pacs 'pacman -Ss'                           # Search
     abbr -a pacr 'sudo pacman -Rns'                     # Remove + dependencies
-    abbr -a pacq 'pacman -Qe'                           # List 
+    abbr -a pacq 'pacman -Qe'                           # List
     abbr -a pacinfo 'pacman -Si'                        # View detailed package metadata
 
     # System updates & CachyOS maintenance
@@ -122,9 +122,21 @@ if status is-interactive
     abbr -a -p anywhere .conf '/home/nazhanys/.config/'
 
 
-    # Quick Navigations
+
+
+    # =========================================================================
+    # 8. Quick Navigations
+    # =========================================================================
 
     abbr -a fishconf '$EDITOR ~/.config/fish/config.fish'
     abbr -a reload 'source ~/.config/fish/config.fish'
     abbr -a viconf 'cd ~/.config/nvim/'
+    abbr -a gtproj 'cd ~/Projects'
+    abbr -a gtdocs 'cd ~/Documents'
+    abbr -a gtdl 'cd ~/Downloads'
+    abbr -a gtmusic 'cd ~/Music'
+
+
 end
+
+

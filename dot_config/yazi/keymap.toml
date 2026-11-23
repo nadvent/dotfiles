@@ -32,14 +32,32 @@ desc = "Go to Projects"
 # Enter: Navigate directory or open file with $EDITOR
 [[mgr.prepend_keymap]]
 on   = [ "<Enter>" ]
-run  = "plugin --sync smart-enter"
+run  = "plugin smart-enter"
 desc = "Enter directory or open file with $EDITOR"
 
-# Shift+Enter: Open with system default application (xdg-open / open)
+# Shift+Enter: Open with system default application (xdg-open / open) and close Yazi
 [[mgr.prepend_keymap]]
 on   = [ "<S-Enter>" ]
-run  = '''shell "sh -c 'for f; do (xdg-open \"$f\" >/dev/null 2>&1 || open \"$f\" >/dev/null 2>&1); done' -- %s" --orphan'''
-desc = "Open with system default app"
+run  = '''shell 'for f in %s; do setsid -f xdg-open "$f" >/dev/null 2>&1; done; ya emit quit' --orphan'''
+desc = "Open with system default app and close Yazi"
+
+# Ctrl+p: Play selected files or hovered folder directly with mpv
+[[mgr.prepend_keymap]]
+on   = [ "<C-p>" ]
+run  = 'shell "mpv \"$@\"" --orphan'
+desc = "Play selected files or hovered folder in mpv"
+
+# Alt+p: Play entire current directory sequentially with mpv
+[[mgr.prepend_keymap]]
+on   = [ "<A-p>" ]
+run  = 'shell "mpv ." --orphan'
+desc = "Play current directory in mpv"
+
+# M: Export playlist.m3u8 from selected files or all videos in directory
+[[mgr.prepend_keymap]]
+on   = [ "M" ]
+run  = '''shell 'if [ "$#" -gt 0 ]; then printf "%s\n" "$@" > playlist.m3u8; else find -maxdepth 1 -type f \( -iname "*.mp4" -o -iname "*.mkv" -o -iname "*.avi" -o -iname "*.webm" -o -iname "*.flv" -o -iname "*.ts" -o -iname "*.mov" \) | sort -V > playlist.m3u8; fi; notify-send "Playlist Created" "Saved to playlist.m3u8"' --orphan'''
+desc = "Create playlist.m3u8 from selected or current folder"
 
 # ------------------------------------------------------------------------------
 # 3. Archives & Compression (Ouch)
@@ -55,7 +73,7 @@ desc = "Compress with ouch"
 # Delete: sends to trash in normal folders, permanently deletes in trash
 [[mgr.prepend_keymap]]
 on   = [ "d" ]
-run  = "plugin --sync smart-delete"
+run  = "plugin smart-delete"
 desc = "Trash file, or permanently delete if in trash"
 
 # Restore: Undo / restore deleted files via restore.yazi
@@ -72,7 +90,7 @@ desc = "Restore deleted files/folders (Interactive)"
 # Restore selected files directly in trash (using Yazi's native trash service)
 [[mgr.prepend_keymap]]
 on   = [ "R" ]
-run  = 'shell "ya pub trash-restore --list %s"'
+run  = 'shell "ya pub trash-restore --list %S"'
 desc = "Restore selected file(s) from trash"
 
 # ------------------------------------------------------------------------------

@@ -39,6 +39,7 @@ curve = "spring:1,800"
 [animation.windows_resize]
 enabled = true
 curve = "spring:1,800"
+# wait_for_redraw = true  # When enabled = false, wait up to 150ms for redraws before switching layout
 
 # Workspace Switching: Smooth, non-jarring slide
 [animation.workspaces]

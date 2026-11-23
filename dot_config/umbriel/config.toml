@@ -10,9 +10,6 @@ files = [
   # Presets & effects
   "/usr/share/umbriel/effects/cursor/trail/effect.toml",
 
-  # Displays managed dynamically by Noctalia
-  "outputs.toml",
-
   # Modular configuration files
   "cfg/animation.toml",
   "cfg/autostart.toml",

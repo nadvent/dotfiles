@@ -64,6 +64,7 @@ Taskfile.yml
 **/.*.swo
 **/*.log
 **/__pycache__/**
+**/*.o
 
 # ------------------------------------------------------------------------------
 # Media & runtime daemon caches (MPD, RMPC)

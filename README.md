@@ -1,14 +1,13 @@
 # 🌌 Dotfiles
 
-> Personal dotfiles repository managed cleanly with [chezmoi](https://www.chezmoi.io/), configured for **Arch Linux / CachyOS** with **Limine** bootloader for automated snapshots and recovery, and featuring **Umbriel** Wayland compositor with **Noctalia** shell.
+> Personal dotfiles managed with [chezmoi](https://www.chezmoi.io/) for **Arch Linux / CachyOS** (with **Limine** snapshots), built around the **Umbriel** Wayland compositor and **Noctalia** shell.
 
 ---
 
 ## 📑 Table of Contents
 
 - [Overview](#-overview)
-  - [Desktop Tour & Showcase](#-desktop-tour--showcase)
-  - [Screenshots](#-screenshots)
+- [Showcase & Screenshots](#-showcase--screenshots)
 - [Tools & Applications](#-tools--applications)
   - [Desktop & Compositor](#desktop--compositor)
   - [Terminal & Shell](#terminal--shell)
@@ -17,28 +16,25 @@
   - [Custom Scripts & Daemons](#custom-scripts--daemons)
 - [Repository Structure](#-repository-structure)
 - [Installation & Setup](#-installation--setup)
-  - [1. Prerequisites](#1-prerequisites)
-  - [2. Initialize with Chezmoi](#2-initialize-with-chezmoi)
-  - [3. Run System Bootstrap](#3-run-system-bootstrap)
 - [Services Setup](#-services-setup)
-  - [Kanata (Keyboard Remapper)](#1-kanata-keyboard-remapper)
-  - [Yazi D-Bus File Manager Service](#2-yazi-d-bus-filemanager1-service)
-- [Scratchpad & Keybind Highlights](#-scratchpad--keybind-highlights)
-- [Chezmoi Workflow & Maintenance](#-chezmoi-workflow--maintenance)
+- [Keybind Highlights](#-keybind-highlights)
+- [Chezmoi Workflow](#-chezmoi-workflow)
 
 ---
 
 ## 🔭 Overview
 
-This repository contains my personal system configurations, custom helper scripts, and application profiles. Key goals of this setup:
+This repository holds my desktop configs, shell setup, helper scripts, and systemd user services:
 
-- **Reproducibility**: Automated bootstrapping across fresh Arch / CachyOS installations via `bootstrap.sh`.
-- **Separation of Concerns**: Non-interactive dotfiles are managed via Chezmoi, while repo-internal scripts, documentation, and sensitive files are filtered using `.chezmoiignore` and `.gitignore`.
-- **Dynamic theming**: Noctalia V5 with M3 Vibrant palette applied for Umbriel, Ghostty, Obsidian, Yazi, Zathura, Zen and specially customized [Neovim](https://github.com/nadvent/neovim-conf).
-- **Keyboard Layers**: Kanata for vim-like motions and ergonomics on boot. There's navigation with Modifier (Meta, Ctrl, etc.) layers and symbol layers with remapped CapsLock button.
-- **Smooth Virtual Machine**: Near bare metal performance with **[GPU passthrough and native resolution with Looking Glass](https://gist.github.com/safwyls/96b6cf4b49e04af2668b7a77502e5ff2)** setup. Just edit the `/etc/default/limine` for the IOMMU and PCI ids to turn on or off, regenerate the boot entries, and reboot
+- **Reproducible Bootstrap**: Automated setup on fresh Arch / CachyOS installs via [`bootstrap.sh`](bootstrap.sh).
+- **Clean Separation**: Tracked dotfiles are deployed by Chezmoi, while repo scripts, screenshots, caches, and runtime databases are excluded via [`.chezmoiignore`](.chezmoiignore) and [`.gitignore`](.gitignore).
+- **Dynamic Theming**: Noctalia V5 generates matching Material 3 palettes across Umbriel, Ghostty, Obsidian, Yazi, Zathura, Zen, and my [Neovim config](https://github.com/nadvent/neovim-conf).
+- **Ergonomic Keyboard Layers**: Kanata provides CapsLock-triggered vim navigation, modifier, and symbol layers at boot.
+- **GPU Passthrough VM**: Near bare-metal Windows VM with [GPU passthrough and Looking Glass](https://gist.github.com/safwyls/96b6cf4b49e04af2668b7a77502e5ff2)—toggle IOMMU/PCI IDs in `/etc/default/limine`, regenerate boot entries, and reboot.
 
-### 📸 Screenshots
+### 📸 Showcase & Screenshots
+
+![Desktop & RMPC Animated Tour](pictures/desktop_showcase.gif)
 
 | 🌌 Desktop Overview & RMPC Player (`rmpc` + `Ghostty`) |  📖 E-Ink Reading Mode Shader (`Umbriel` + `Zathura`)   |
 | :----------------------------------------------------: | :-----------------------------------------------------: |
@@ -46,12 +42,12 @@ This repository contains my personal system configurations, custom helper script
 | **⚡ Control Center & Notes Scratchpad (`Obsidian`)**  |    **🎨 Noctalia Wallpaper & Dynamic Theme Engine**     |
 | [![Control Center](pictures/03.png)](pictures/03.png)  | [![Wallpaper Picker](pictures/04.png)](pictures/04.png) |
 
-> **Highlights from my setup:**
+> **Setup Highlights:**
 >
-> - **01 · Daily Driver & Music**: Ghostty running custom `rmpc` vertical scratchpad (album art, live waveform seekbar, Rosé Pine Dawn styling), fastfetch telemetry, and Zen Browser bathed in Noctalia's dynamic M3 palette.
-> - **02 · E-Ink Paper Shader**: Long writing and study sessions without eye fatigue. Implemented `reading_mode.glsl` compositor shader converts any window or full screen into textured e-ink paper with physical grain and Bayer dithering.
-> - **03 · Togglable Scratchpads**: Very useful for global apps to persist across workspaces. Used for quick access to qutebrowser, Obsidian(TODO), Music player, terminal.
-> - **04 · Instant Aesthetics**: The Noctalia wallpaper manager (`Mod+Shift+W`) to visually pick wallpapers and automatically generates matching color palettes across the compositor, terminal, editor, and UI widgets.
+> - **01 · Daily Driver & Music**: Ghostty running the vertical `rmpc` scratchpad (album art, live waveform seekbar, visual playlist/album minipicker), fastfetch, and Zen Browser styled with Noctalia's M3 palette.
+> - **02 · E-Ink Reading Shader**: Custom [`reading_mode.glsl`](dot_config/umbriel/reading_mode.glsl) post-processing shader renders a textured e-ink paper look with Bayer dithering for long reading sessions.
+> - **03 · Persistent Scratchpads**: Global toggleable scratchpads across workspaces for Qutebrowser quick search, Obsidian notes, `rmpc` music player, and a floating terminal.
+> - **04 · Instant Theming**: Noctalia's wallpaper picker (`Mod+Shift+W`) dynamically updates color palettes across the compositor, terminal, editor, and desktop widgets.
 
 ---
 
@@ -59,62 +55,58 @@ This repository contains my personal system configurations, custom helper script
 
 ### Desktop & Compositor
 
-- **Compositor**: [Umbriel](https://docs.noctalia.dev/umbriel/) (dynamic scrolling Wayland tiling window manager with scratchpad and HDR)
-- **Compositor Shaders**: Custom GLSL post-processing shaders including [reading_mode.glsl](file:///home/nazhanys/.local/share/chezmoi/dot_config/umbriel/reading_mode.glsl) (physical e-ink paper simulation with Bayer dithering) and native cursor trails
-- **Shell & Widgets**: [Noctalia V5](https://docs.noctalia.dev/) (desktop bar, app launcher, notification daemon, control center, M3 palette generator)
-- **Terminal**: [Ghostty](https://ghostty.org/) (native GPU-accelerated terminal with [GLSL cursor shaders](https://github.com/sahaj-b/cursor-shaders) and dynamic tab theming)
-- **Browsers**: [Zen Browser](https://zen-browser.app/) (primary with profiles and containers), [Qutebrowser](https://qutebrowser.org/) (lightweight floating quick-search scratchpad with vim-like motions)
-- **File Managers**: [Yazi](https://yazi-rs.github.io/) (blazing-fast terminal file manager with vim-motions, bookmarks and shortcuts)
-- **Media & Audio**: [rmpc](https://github.com/mierak/rmpc) (modern terminal MPD client with custom album art, waveform seekbar, & Rosé Pine Dawn theme), [MPD](https://www.musicpd.org/) (with `mpd-mpris` integration), [Astra](https://github.com/AstraPlayer/Astra), PipeWire / WirePlumber
+- **Compositor**: [Umbriel](https://docs.noctalia.dev/umbriel/) (scrolling/master/dwindle Wayland compositor with scratchpads, blur, and HDR)
+- **Compositor Shaders**: Custom GLSL shaders including [`reading_mode.glsl`](dot_config/umbriel/reading_mode.glsl) and cursor trails
+- **Shell & Widgets**: [Noctalia V5](https://docs.noctalia.dev/) (bar, launcher, notifications, control center, M3 palette engine)
+- **Terminal**: [Ghostty](https://ghostty.org/) (GPU-accelerated terminal with [GLSL cursor shaders](https://github.com/sahaj-b/cursor-shaders) and dynamic tab theming)
+- **Browsers**: [Zen Browser](https://zen-browser.app/) (primary) and [Qutebrowser](https://qutebrowser.org/) (floating vim-driven quick-search scratchpad)
+- **File Manager**: [Yazi](https://yazi-rs.github.io/) (terminal file manager with custom `smart-delete.yazi` plugin and D-Bus `FileManager1` integration)
+- **Music & Audio**: [rmpc](https://github.com/mierak/rmpc) (custom vertical scratchpad, playlist/album minipicker, and waveform daemon), [MPD](https://www.musicpd.org/) ([`mpd.conf`](dot_config/mpd/mpd.conf) over PipeWire with `mpd-mpris`), PipeWire / WirePlumber
 - **Virtualization**: [Looking Glass](https://looking-glass.io/) (low-latency KVM frame-relay client)
-- **Document Viewer**: [Zathura](https://pwmt.org/projects/zathura/) (with MuPDF backend)
+- **Document Viewer**: [Zathura](https://pwmt.org/projects/zathura/) (MuPDF backend)
 
 ### Terminal & Shell
 
-- **Shell**: [Fish](https://fishshell.com/) 3.6+ with universal variables, aliases, and abbreviations
-- **Prompts & Shell History**: [Fastfetch](https://github.com/fastfetch-cli/fastfetch), [Atuin](https://atuin.sh/) (shell history synchronization)
-- **Editor**: [Neovim](https://neovim.io/) & [Zed](https://zed.dev/) (`zeditor`)
-- **Fonts**: (13pt) LigaSF Mono Nerd Font and Maple Mono for _Italics_. Occasionally Monaspace Xenon for Maths writing.
+- **Shell**: [Fish](https://fishshell.com/) with universal variables, aliases, and abbreviations
+- **Telemetry & History**: [Fastfetch](https://github.com/fastfetch-cli/fastfetch) and [Atuin](https://atuin.sh/)
+- **Editors**: [Neovim](https://github.com/nadvent/neovim-conf) & [Zed](https://zed.dev/)
+- **Fonts**: LigaSF Mono Nerd Font (13pt), Maple Mono for italics, and Monaspace Xenon for math
 
 ### Development & Runtimes
 
-- **Rust**: Toolchain managed via `rustup` (`stable`), `rust-analyzer`, `clippy`, and `cargo-binstall`
-- **Node.js**: Node runtime, `npm`, `pnpm`
-- **Python**: [uv](https://astral.sh/uv) (fast Python package and environment manager)
-- **CMake & Ninja**: Cross-platform build system
-- **Polyglot Manager**: [mise](https://mise.jdx.dev/) for language runtime versioning
+- **Rust**: `rustup` (`stable`), `rust-analyzer`, `clippy`, `cargo-binstall`
+- **Node.js**: Node, `npm`, `pnpm`
+- **Python**: [uv](https://astral.sh/uv)
+- **Build & Version Management**: CMake, Ninja, and [mise](https://mise.jdx.dev/)
 
 ### Modern CLI Utilities
 
-| Tool                 | Drop-in / Purpose                                          |
-| :------------------- | :--------------------------------------------------------- |
-| `eza`                | Modern replacement for `ls` with Git status and file icons |
-| `bat`                | Cat clone with syntax highlighting and Git integration     |
-| `zoxide`             | Smarter, learning `cd` command                             |
-| `ripgrep` (`rg`)     | Fast recursive regex search                                |
-| `fd`                 | Fast, user-friendly alternative to `find`                  |
-| `lazygit` (`lg`)     | Simple terminal UI for git commands                        |
-| `lazydocker` (`ldo`) | Terminal UI for Docker containers                          |
-| `gh`                 | Official GitHub CLI                                        |
-| `dust`               | Graphical disk space usage viewer                          |
-| `pydf`               | Colorized `df` disk filesystem usage                       |
-| `wl-clipboard`       | Wayland clipboard utilities (`wl-copy`, `wl-paste`)        |
+| Tool | Purpose |
+| :--- | :--- |
+| `eza` | Modern `ls` replacement with Git status and icons |
+| `bat` | `cat` replacement with syntax highlighting |
+| `zoxide` | Smarter directory jumping (`cd`) |
+| `ripgrep` (`rg`) | Fast recursive regex search |
+| `fd` | Fast, friendly `find` alternative |
+| `lazygit` (`lg`) | Terminal UI for Git |
+| `lazydocker` (`ldo`) | Terminal UI for Docker |
+| `gh` | GitHub CLI |
+| `dust` / `pydf` | Disk usage and filesystem viewers |
+| `wl-clipboard` | Wayland clipboard utilities (`wl-copy`, `wl-paste`) |
 
 ### Custom Scripts & Daemons
 
-Custom scripts located in `~/.local/bin/` (tracked in `dot_local/bin/`):
+Tracked in `dot_local/bin/` and `dot_config/rmpc/`:
 
-- `escape-scratchpad`: Dismisses all scratchpads with.
-- `ghostty-scratchpad`: Quick access terminal.
-- `qutebrowser-scratchpad`: Togglable floating browser window for quick searches.
-- `sync-ghostty-tab-theme`: Dynamically parses Noctalia palettes and updates Ghostty tab styling and GTK CSS to match the active theme.
+- `escape-scratchpad`: Dismisses any currently visible scratchpads in Umbriel.
+- `ghostty-scratchpad` / `qutebrowser-scratchpad`: Floating terminal and quick-search scratchpad launchers.
+- `sync-ghostty-tab-theme`: Syncs Ghostty tab and GTK CSS styling to Noctalia's active color palette.
 - `toggle-reading-mode.sh`: Toggles the e-ink paper screen shader in Umbriel.
-- `umbriel-layout-notify`: Real-time notification daemon for tiling modes.
-- `umbriel-scratchpad-autoclose`: Automatically clears the scratchpad space if no apps are active.
-- `toggle-audio.sh`: Quick audio output toggle between Desktop Speakers and Behringer UMC204HD audio interface.
-- `lg_vm.sh`: Background loop detecting shared memory `/dev/shm/looking-glass` to auto-launch Looking Glass client.
-- `yazi-filemanager1`: Python D-Bus daemon implementing `org.freedesktop.FileManager1` for Yazi file choosing.
-- `waveform_daemon.py`: Background daemon extracting audio waveform peaks via ffmpeg and updating MPD stickers for rmpc (in `dot_config/rmpc/scripts/`).
+- `umbriel-layout-notify`: Sends live notifications when switching Umbriel tiling layouts.
+- `toggle-audio.sh`: Switches output between desktop speakers and Behringer UMC204HD.
+- `lg_vm.sh`: Watches `/dev/shm/looking-glass` to auto-launch Looking Glass when the VM starts.
+- `yazi-filemanager1`: Python D-Bus daemon implementing `org.freedesktop.FileManager1` so browsers open folders in Yazi.
+- `rmpc` suite (`dot_config/rmpc/`): `launch_rmpc.sh` (scratchpad launcher with dedicated `ghostty.conf`), `playlist_picker.sh`, `fav_toggle.sh`, and the native `rmpc-picker` source (`dot_config/rmpc/picker/`) powering both visual playlist/album search and the `rmpc-waveform.service` daemon.
 
 ---
 
@@ -128,8 +120,8 @@ Custom scripts located in `~/.local/bin/` (tracked in `dot_local/bin/`):
 ├── bootstrap.sh
 ├── pictures/
 ├── scripts/
-│   ├── install-yazi-plugins.sh  # Install/sync Yazi plugins from package.toml
-│   └── manage-assets.sh         # Script to inventory, import, and run scripts & .desktop files
+│   ├── install-yazi-plugins.sh
+│   └── manage-assets.sh
 ├── dot_config/
 │   ├── fish/
 │   ├── ghostty/
@@ -152,151 +144,71 @@ Custom scripts located in `~/.local/bin/` (tracked in `dot_local/bin/`):
 
 ## 🚀 Installation & Setup
 
-### 1. Prerequisites
-
-Ensure Arch Linux or CachyOS is installed with network access:
-
 ```bash
-sudo pacman -S --needed git base-devel
-```
+# 1. Prerequisites (Arch / CachyOS)
+sudo pacman -S --needed git base-devel chezmoi
 
-### 2. Initialize with Chezmoi
-
-```bash
-# Install chezmoi if needed
-sudo pacman -S --needed chezmoi
-
-chezmoi init <your-repo-url>
-
-# Review changes first
+# 2. Initialize, inspect, and apply dotfiles
+chezmoi init https://github.com/nadvent/dotfiles.git
 chezmoi diff
-
 chezmoi apply
-```
 
-### 3. Run System Bootstrap
-
-Run the included [`bootstrap.sh`](file:///home/nazhanys/.local/share/chezmoi/bootstrap.sh) to install all packages, language runtimes, fonts, and enable user services:
-
-```bash
+# 3. Optional full system bootstrap (packages, runtimes, fonts, services)
 cd ~/.local/share/chezmoi
-
-# Test first (optional)
 ./bootstrap.sh --dry-run
-
 ./bootstrap.sh --all
 ```
 
-#### Selective Bootstrap Flags
-
-```bash
-./bootstrap.sh --cli      # CLI and tools
-./bootstrap.sh --gui      # GUI apps, fonts
-./bootstrap.sh --rust     # Rustup, components, and Kanata
-./bootstrap.sh --node     # Node.js, NPM, and pnpm
-./bootstrap.sh --yazi     # Yazi plugins and companion tools (ouch, glow)
-./bootstrap.sh --assets   # Deploy scripts, desktop entries, and user services
-```
+Selective bootstrap flags: `--cli`, `--gui`, `--rust`, `--node`, `--yazi`, `--assets`.
 
 ---
 
 ## ⚙️ Services Setup
 
-Two user systemd services run in the background to handle keyboard remapping and desktop file-manager D-Bus requests.
-
-### 1. Kanata (Keyboard Remapper)
-
-Remaps keys (such as CapsLock to Esc/Control) based on [kanata.kbd](file:///home/nazhanys/.local/share/chezmoi/dot_config/kanata/kanata.kbd). Do note that currently, I hard-fixed the keyboard device ids by name and I have a specific issue of having to combine two streams of keyboard input.
-
-1. Grant `uinput` permissions if not already present:
+1. **Kanata (Keyboard Remapper)** — Uses [`kanata.kbd`](dot_config/kanata/kanata.kbd) (device IDs are currently matched to my local keyboards):
    ```bash
    sudo usermod -aG input,uinput "$USER"
    echo 'KERNEL=="uinput", MODE="0660", GROUP="uinput", OPTIONS+="static_node=uinput"' | sudo tee /etc/udev/rules.d/99-input.rules
    sudo udevadm control --reload && sudo udevadm trigger
-   ```
-2. Enable and start the service:
-   ```bash
-   systemctl --user daemon-reload
    systemctl --user enable --now kanata.service
-   systemctl --user status kanata.service
    ```
-
-### 2. Yazi D-Bus (FileManager1) Service
-
-Allows browsers and applications (Zen, Chrome, Firefox) to trigger `Open Containing Folder` directly inside Yazi within a floating Ghostty window.
-
-1. Ensure `python` and `python-gobject` are installed:
+2. **Yazi D-Bus (`FileManager1`) & RMPC Waveform Daemons**:
    ```bash
    sudo pacman -S --needed python python-gobject
-   ```
-2. Enable and start the service:
-   ```bash
+   make -C ~/.config/rmpc/picker
    systemctl --user daemon-reload
-   systemctl --user enable --now yazi-filemanager1.service
-   systemctl --user status yazi-filemanager1.service
+   systemctl --user enable --now yazi-filemanager1.service rmpc-waveform.service umbriel-layout-notify.service
    ```
 
 ---
 
-## ⌨️ Keybind Example
+## ⌨️ Keybind Highlights
 
-Some Umbriel keybindings. See [`dot_config/umbriel/cfg/keybinds.toml`](file:///home/nazhanys/.local/share/chezmoi/dot_config/umbriel/cfg/keybinds.toml):
+Selected Umbriel keybindings (full list in [`dot_config/umbriel/cfg/keybinds.toml`](dot_config/umbriel/cfg/keybinds.toml)):
 
-| Keybinding                           | Action / Command                                                  |
-| :----------------------------------- | :---------------------------------------------------------------- |
-| `Mod`                                | Toggle Noctalia Application Launcher                              |
-| `Mod + Return`                       | Toggle Terminal Scratchpad (`ghostty-scratchpad`)                 |
-| `Mod + Space`                        | Toggle Quick Search Scratchpad (`qutebrowser-scratchpad`)         |
-| `Mod + N`                            | Toggle Notes Scratchpad (`obsidian`)                              |
-| `Mod + M`                            | Toggle Music Scratchpad (`astra`)                                 |
-| `Mod + Escape`                       | Dismiss / hide any currently visible scratchpad                   |
-| `Mod + B`                            | Launch Zen Browser                                                |
-| `Mod + Shift + E`                    | Launch Zed Editor                                                 |
-| `Mod + E`                            | Launch Yazi File Manager                                          |
-| `Mod + Ctrl + R`                     | Toggle E-Ink Paper Reading Mode Shader (`toggle-reading-mode.sh`) |
-| `Mod + F12`                          | Toggle Audio Sink (Speakers ⟷ Behringer UMC204HD)                 |
-| `Print` / `Ctrl + Shift + 1`         | Screenshot Region (`noctalia msg screenshot-region`)              |
-| `Shift + Print` / `Ctrl + Shift + 2` | Screenshot Fullscreen (`noctalia msg screenshot-fullscreen`)      |
-| `Alt/Mod + Print`                    | Screenshot Focused Window (`noctalia msg screenshot-window`)      |
-| `Ctrl + Print` / `Ctrl + Shift + 3`  | Screenshot & Annotate (`noctalia msg screenshot-annotate`)        |
+| Keybinding | Action |
+| :--- | :--- |
+| `Mod` | Toggle Noctalia App Launcher |
+| `Mod + Return` / `Mod + Space` | Toggle Terminal / Quick Search Scratchpad |
+| `Mod + N` / `Mod + M` | Toggle Notes (`Obsidian`) / Music (`rmpc`) Scratchpad |
+| `Mod + Escape` | Dismiss active scratchpad |
+| `Mod + B` / `Mod + E` / `Mod + Shift + E` | Launch Zen Browser / Yazi / Zed |
+| `Mod + Backslash` | Cycle workspace layout (`scrolling` / `master` / `dwindle`) |
+| `Mod + Ctrl + R` | Toggle E-Ink Reading Mode shader |
+| `Mod + F12` | Toggle Audio Output (Speakers ⟷ Behringer UMC204HD) |
+| `Print` / `Shift + Print` / `Ctrl + Print` | Screenshot Region / Fullscreen / Annotate |
 
 ---
 
-## 🔄 Chezmoi Workflow & Maintenance
-
-### Daily Commands
+## 🔄 Chezmoi Workflow
 
 ```bash
-# Edit a managed file (opens in $EDITOR)
-chezmoi edit ~/.config/fish/config.fish
-
-# Check differences between repo state and $HOME
-chezmoi diff
-
-# Apply pending changes from repo to $HOME
-chezmoi apply
-
-# Add a newly created configuration file to chezmoi
-chezmoi add ~/.config/new-app/config.toml
+chezmoi diff                      # Compare repo vs. $HOME
+chezmoi re-add                    # Pull edited $HOME configs back into repo
+chezmoi apply                     # Apply repo changes to $HOME
+./scripts/manage-assets.sh status # Inspect tracked helper scripts & .desktop files
 ```
-
-### Managing Scripts & Desktop Entries
-
-Use the asset management helper script:
-
-```bash
-# Check status of all referenced scripts and desktop entries
-./scripts/manage-assets.sh status
-
-# Re-import modified target files from $HOME into chezmoi
-./scripts/manage-assets.sh import
-
-# Deploy tracked assets from chezmoi repo to $HOME (~/.local/bin, etc.)
-./scripts/manage-assets.sh deploy
-```
-
----
 
 ## 📄 License
 
-This repository is maintained for personal use and shared under the [MIT License](LICENSE). Feel free to adapt and borrow the configurations!
+Shared under the [MIT License](LICENSE). Feel free to adapt anything useful!

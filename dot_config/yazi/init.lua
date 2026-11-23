@@ -6,7 +6,7 @@
 -- 1. Bookmarks Plugin Setup (dedukun/bookmarks)
 -- ------------------------------------------------------------------------------
 require("bookmarks"):setup({
-	last_directory = { dir = "jump" }, -- Options: "jump", "mark", "dir"
+	last_directory = { enable = true, persist = true, mode = "jump" }, -- Options: "jump", "mark", "dir"
 	persist = "all",                   -- Options: "none", "all", "vim"
 	notify = {
 		enable = true,

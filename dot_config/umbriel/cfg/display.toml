@@ -8,15 +8,24 @@
 # Remove the laptop panel from the desktop while the lid is closed, then
 # restore it when the lid opens. Replace eDP-1 with the name from `umbriel outputs`.
 [events]
-lid_close = "umbriel msg output-disable:eDP-1"
-lid_open = "umbriel msg output-enable:eDP-1"
+lid_close = "umbriel msg output-disable eDP-1"
+lid_open = "umbriel msg output-enable eDP-1"
 
-# Static / fallback output configuration.
-# Run `umbriel outputs` to find names and modes.
-# Note: Dynamic displays are also managed in outputs.toml by Noctalia.
-[output.DP-1]
-mode = "2560x1440@144"
+# Output configuration (migrated from outputs.toml; umbriel-displays plugin removed)
+[output."BOE 0x0AA8 Unknown"]
+mode = "3072x1920@120.002"
+position = [2133, 0]
+scale = 2
+color_profile = "edid"
+sdr_gamut = "srgb"
+
+[output."Samsung Electric Company Odyssey G60SD HNAX500014"]
+mode = "2560x1440@239.957"
 position = [0, 0]
 scale = 1.2
 vrr = "fullscreen"
+tearing = false
 hdr = "auto"
+sdr_white = 205
+color_profile = "edid"
+sdr_gamut = "srgb"

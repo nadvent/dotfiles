@@ -6,7 +6,7 @@
 # if no instance is running, or toggle its visibility if already active.
 
 if command -v umbriel >/dev/null 2>&1; then
-    umbriel msg "scratchpad-toggle:terminal"
+    umbriel msg scratchpad-toggle terminal
 else
     exec ghostty-scratchpad "$@"
 fi

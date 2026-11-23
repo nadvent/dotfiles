@@ -22,6 +22,15 @@ prepend_previewers = [
 edit = [
   { run = "sh -c '${EDITOR:-nvim} \"$@\"' -- %s", block = true, desc = "$EDITOR", for = "unix" },
 ]
+open = [
+  { run = 'for f in %s; do setsid -f xdg-open "$f" >/dev/null 2>&1; done; ya emit quit', orphan = true, desc = "Open", for = "linux" },
+]
+play = [
+  { run = 'mpv "$@"', orphan = true, desc = "Play with mpv", for = "unix" },
+  { run = 'mpv --shuffle "$@"', orphan = true, desc = "Play with mpv (shuffle)", for = "unix" },
+  { run = 'for f in %s; do setsid -f xdg-open "$f" >/dev/null 2>&1; done', orphan = true, desc = "Open with default app", for = "linux" },
+  { run = "mediainfo %s1; echo 'Press enter to exit'; read _", block = true, desc = "Show media info", for = "unix" },
+]
 extract = [
   { run = 'ouch d -y %s', desc = "Extract with ouch", for = "unix" },
   { run = 'ouch d -y --here %s', desc = "Extract here with ouch", for = "unix" },
@@ -32,6 +41,10 @@ extract = [
 # ------------------------------------------------------------------------------
 [open]
 prepend_rules = [
+  # Playlists and directories
+  { url = "*.{m3u,m3u8,pls}", use = [ "play", "reveal" ] },
+  { mime = "inode/directory", use = [ "open", "play" ] },
+
   # Trash rules
   { mime = "trash/**", use = [ "trash" ] },
 

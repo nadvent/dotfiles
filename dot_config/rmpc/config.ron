@@ -8,7 +8,7 @@
     cache_dir: "/tmp/rmpc/cache",
     lyrics_dir: "~/Music",
     volume_step: 5,
-    max_fps: 60,
+    max_fps: 30,
     scrolloff: 2,
     wrap_navigation: true,
     enable_mouse: true,
@@ -16,25 +16,43 @@
     status_update_interval_ms: 1000,
     select_current_song_on_change: true,
     center_current_song_on_change: true,
+    rewind_to_start_sec: Some(3),
+    show_playlists_in_browser: All,
 
-    // Disabled to avoid sticker errors / stderr output
     on_song_change: None,
     exec_on_song_change_at_start: false,
 
     album_art: (
         method: Auto,
-        max_size_px: (width: 1000, height: 1000),
+        max_size_px: (width: 560, height: 560),
         vertical_align: Center,
         horizontal_align: Center,
     ),
 
     keybinds: (
+        clear: true,
         global: {
-            // Instant toggle between the 2 layouts
+            // Instant toggle between layouts
             "<Tab>": NextTab,
             "<S-Tab>": PreviousTab,
             "1": SwitchToTab("Player"),
             "2": SwitchToTab("Picker"),
+            "3": SwitchToTab("Playlists"),
+            "4": SwitchToTab("Library"),
+
+            // Playlist minipicker, visual search & favourites toggle
+            "m": ExternalCommand(
+                command: ["sh", "-c", "exec \"$HOME/.config/rmpc/scripts/playlist_picker.sh\""],
+                description: "Open playlist minipicker",
+            ),
+            "S": ExternalCommand(
+                command: ["sh", "-c", "exec \"$HOME/.config/rmpc/scripts/playlist_picker.sh\" --search"],
+                description: "Open visual folder/album search",
+            ),
+            "F": ExternalCommand(
+                command: ["sh", "-c", "exec \"$HOME/.config/rmpc/scripts/fav_toggle.sh\""],
+                description: "Toggle song in favourites",
+            ),
 
             // Playback & volume controls
             "p": TogglePause,
@@ -49,8 +67,12 @@
             "x": ToggleRandom,
             "c": ToggleConsume,
             "v": ToggleSingle,
+            "o": ShowOutputs,
+            "R": AddRandom,
             "u": Update,
+            "U": Rescan,
             "~": ShowHelp,
+            "?": ShowHelp,
             "I": ShowCurrentSongInfo,
             ":": CommandMode,
             "q": Quit,
@@ -68,11 +90,18 @@
             "<S-Down>": PaneDown,
             "<C-k>": PaneUp,
             "<C-j>": PaneDown,
+            "<C-w>h": PaneLeft,
+            "<C-w>l": PaneRight,
             "<C-u>": UpHalf,
             "<C-d>": DownHalf,
+            "<C-b>": PageUp,
+            "<C-f>": PageDown,
+            "<PageUp>": PageUp,
+            "<PageDown>": PageDown,
             "g": Top,
             "G": Bottom,
             "<Space>": Select,
+            "<C-Space>": InvertSelection,
             "<CR>": Confirm,
             "a": Add,
             "A": AddAll,
@@ -83,6 +112,11 @@
             "J": MoveDown,
             "K": MoveUp,
             "D": Delete,
+            "X": DeleteFromPlaylist(),
+            "<C-r>": Rename,
+            "<C-s>s": Save(kind: Modal(all: false, duplicates_strategy: Ask)),
+            "<C-s>a": Save(kind: Modal(all: true, duplicates_strategy: Ask)),
+            "<C-z>": ContextMenu(),
             "B": ShowInfo,
             "<Esc>": Close,
             "<C-c>": Close,
@@ -93,6 +127,7 @@
             "D": DeleteAll,
             "C": JumpToCurrent,
             "X": Shuffle,
+            "P": AddToPlaylist,
         },
     ),
 
@@ -103,26 +138,32 @@
             pane: Split(
                 direction: Vertical,
                 panes: [
-                    // 1. Album art constrained to ~40% of the column width
+                    // 1. Album art area
                     (
                         size: "0.45r",
-                        pane: Split(
-                            direction: Horizontal,
-                            panes: [
-                                (size: "100%", borders: "NONE", pane: Pane(AlbumArt)),
-                            ],
-                        ),
+                        borders: "NONE",
+                        pane: Pane(AlbumArt),
                     ),
-                    // 2. Compact metadata, transport controls, and progress bar
+                    // 2. Compact metadata, transport controls, waveform, and progress bar
                     (
                         size: "7",
                         borders: "ALL",
+                        border_symbols: Rounded,
                         pane: Component("player_controls_card"),
                     ),
                     (
                         size: "100%",
                         borders: "ALL",
-                        border_title: [(kind: Text(" Up Next "))],
+                        border_symbols: Rounded,
+                        border_title: [
+                            (kind: Text(" Up Next (")),
+                            (kind: Property(Status(QueueLength()))),
+                            (kind: Text(" · ")),
+                            (kind: Property(Status(QueueTimeRemaining()))),
+                            (kind: Text("/")),
+                            (kind: Property(Status(QueueTimeTotal()))),
+                            (kind: Text(") ")),
+                        ],
                         pane: Pane(Queue),
                     ),
                 ],
@@ -139,20 +180,83 @@
                     (
                         size: "4",
                         borders: "ALL",
+                        border_symbols: Rounded,
                         pane: Component("compact_top_bar"),
                     ),
                     // Upper half: Directories / song picker
                     (
                         size: "52%",
                         borders: "ALL",
+                        border_symbols: Rounded,
+                        border_title: [(kind: Text(" Directories "))],
                         pane: Pane(Directories),
                     ),
                     // Lower half: Queue table
                     (
                         size: "48%",
                         borders: "ALL",
-                        border_title: [(kind: Text(" Queue "))],
+                        border_symbols: Rounded,
+                        border_title: [
+                            (kind: Text(" Queue (")),
+                            (kind: Property(Status(QueueLength()))),
+                            (kind: Text(" · ")),
+                            (kind: Property(Status(QueueTimeTotal()))),
+                            (kind: Text(") ")),
+                        ],
                         pane: Pane(Queue),
+                    ),
+                ],
+            ),
+        ),
+
+        // LAYOUT 3: Stored Playlists & Favourites Browser
+        (
+            name: "Playlists",
+            pane: Split(
+                direction: Vertical,
+                panes: [
+                    (
+                        size: "4",
+                        borders: "ALL",
+                        border_symbols: Rounded,
+                        pane: Component("compact_top_bar"),
+                    ),
+                    (
+                        size: "100%",
+                        borders: "ALL",
+                        border_symbols: Rounded,
+                        border_title: [(kind: Text(" Playlists "))],
+                        pane: Pane(Playlists),
+                    ),
+                ],
+            ),
+        ),
+
+        // LAYOUT 4: Library Browser (Artists & Albums)
+        (
+            name: "Library",
+            pane: Split(
+                direction: Vertical,
+                panes: [
+                    (
+                        size: "4",
+                        borders: "ALL",
+                        border_symbols: Rounded,
+                        pane: Component("compact_top_bar"),
+                    ),
+                    (
+                        size: "50%",
+                        borders: "ALL",
+                        border_symbols: Rounded,
+                        border_title: [(kind: Text(" Artists "))],
+                        pane: Pane(Artists),
+                    ),
+                    (
+                        size: "50%",
+                        borders: "ALL",
+                        border_symbols: Rounded,
+                        border_title: [(kind: Text(" Albums "))],
+                        pane: Pane(Albums),
                     ),
                 ],
             ),
